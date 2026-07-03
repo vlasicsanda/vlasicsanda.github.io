@@ -53,11 +53,22 @@ GitHub API-ja — nema nikakvog servera, a ipak umjetnica sve uređuje kroz form
 3. Za minutu-dvije stranica je živa na: `https://KORISNICKO-IME.github.io/sanda-vlasic-web/`
 
 ### 3. Napravi pristupni token (za administraciju)
-1. GitHub → klik na avatar → **Settings → Developer settings → Personal access tokens → Fine-grained tokens → Generate new token**.
-2. Naziv: npr. `sanda-admin`. **Expiration**: 366 dana (podsjetnik: nakon isteka napravi novi i ponovno se prijavi u admin).
-3. **Repository access**: *Only select repositories* → odaberi `sanda-vlasic-web`.
-4. **Permissions → Repository permissions → Contents: Read and write**. Ništa drugo.
-5. Generiraj i **kopiraj token** (prikaže se samo jednom).
+
+**Preporučeno — token bez isteka (ništa se ne obnavlja):** ako je GitHub račun
+napravljen samo za ovu stranicu (na njemu je jedini repozitorij ove stranice),
+najjednostavnije je napraviti classic token bez roka trajanja:
+1. GitHub → avatar → **Settings → Developer settings → Personal access tokens →
+   Tokens (classic) → Generate new token (classic)**.
+2. Naziv npr. `sanda-admin`, **Expiration: No expiration**, kvačica samo na
+   **public_repo**. Generiraj i **kopiraj token** (prikaže se samo jednom).
+3. Prijava u admin s tim tokenom vrijedi zauvijek.
+
+**Stroža varijanta — fine-grained token (istječe za ~1 godinu):** ako na računu ima
+i drugih repozitorija, koristi *Fine-grained tokens → Generate new token*:
+Repository access = *Only select repositories* (samo ovaj repo), Permissions →
+Contents = *Read and write*. Napomena: kad istekne, treba napraviti novi i ponovno
+se prijaviti u admin. (Ako GitHub u izborniku nudi *No expiration* i za fine-grained
+token, slobodno uzmi tu kombinaciju — najbolje od oba.)
 
 ### 4. Prijava u administraciju
 Otvori `https://KORISNICKO-IME.github.io/sanda-vlasic-web/admin.html`,
