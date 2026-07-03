@@ -11,6 +11,7 @@ const STATUS_CLASSES = {
 
 const THEME_LIST = ['white-cube', 'atelier', 'noir', 'kino', 'mozaik'];
 const THEME_LEGACY = { museum: 'white-cube', minimal: 'white-cube', mediterranean: 'atelier', dark: 'noir' };
+const ASSET_VERSION = '20260703-wow';
 
 const S = { settings: null, works: [], collections: [], news: [], t: {}, theme: 'white-cube' };
 const $ = s => document.querySelector(s);
@@ -636,7 +637,7 @@ function renderContact() {
   S.theme = theme;
   document.body.classList.add('theme-' + theme);
   const link = document.getElementById('theme-css');
-  if (link) link.href = 'css/theme-' + theme + '.css';
+  if (link) link.href = 'css/theme-' + theme + '.css?v=' + ASSET_VERSION;
   if (!previewTheme) try { localStorage.setItem('sv-theme', theme); } catch (e) { }
 
   S.works.sort((a, b) => String(b.created || '').localeCompare(String(a.created || '')));
