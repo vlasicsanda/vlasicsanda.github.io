@@ -87,11 +87,49 @@ function reveal() {
   const io = new IntersectionObserver(entries => entries.forEach(e => {
     if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
   }), { threshold: .08 });
+  let n = 0;
   document.querySelectorAll('.work-card, .news-item, .collection-card').forEach(el => {
     if (el.classList.contains('reveal')) return;
     el.classList.add('reveal');
+    el.style.transitionDelay = (n % 10) * 70 + 'ms';
+    n++;
     io.observe(el);
   });
+}
+
+/* ===== Hero: slideshow + Ken Burns + parallax ===== */
+
+function heroSlides() {
+  const imgs = [];
+  if (S.settings.heroImage) imgs.push(S.settings.heroImage);
+  S.works.filter(w => w.featured && w.image).forEach(w => imgs.push(w.image));
+  return Array.from(new Set(imgs)).slice(0, 6);
+}
+
+function initHeroFx() {
+  const wrap = document.getElementById('hero-slides');
+  if (!wrap) return;
+  const slides = wrap.querySelectorAll('.hero-slide');
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (slides.length > 1 && !reduced) {
+    let i = 0;
+    setInterval(() => {
+      slides[i].classList.remove('active');
+      i = (i + 1) % slides.length;
+      slides[i].classList.add('active');
+    }, 6500);
+  }
+  if (!reduced) {
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        wrap.style.transform = 'translateY(' + window.scrollY * 0.25 + 'px)';
+        ticking = false;
+      });
+    }, { passive: true });
+  }
 }
 
 /* ===== Lightbox ===== */
@@ -247,7 +285,10 @@ function renderHome() {
       }).join('')}</ol>
     </div></section>`;
   } else if (S.theme === 'noir' || (S.theme === 'white-cube' && st.heroImage)) {
-    hero = `<section class="hero" style="background-image:url('${esc(st.heroImage)}')">
+    const slides = heroSlides();
+    hero = `<section class="hero">
+      <div class="hero-slides" id="hero-slides">${slides.map((u, i) =>
+        `<div class="hero-slide${i === 0 ? ' active' : ''}" style="background-image:url('${esc(u)}')"></div>`).join('')}</div>
       <div class="hero-overlay"></div>
       <div class="hero-content">
         <h1>${esc(st.heroTitle || st.siteTitle)}</h1>
@@ -263,6 +304,7 @@ function renderHome() {
   }
 
   $('#main').innerHTML = hero + featuredSection(show) + newsTeasers();
+  initHeroFx();
 }
 
 function renderGallery() {

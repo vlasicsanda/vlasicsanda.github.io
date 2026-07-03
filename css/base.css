@@ -78,9 +78,20 @@ p { margin: 0 0 1em; }
 
 /* ===== Hero ===== */
 .hero {
-  position: relative; min-height: 72vh;
+  position: relative; min-height: 72vh; overflow: hidden;
   display: flex; align-items: center; justify-content: center;
   background-size: cover; background-position: center; text-align: center;
+}
+.hero-slides { position: absolute; left: 0; right: 0; top: -30%; bottom: 0; will-change: transform; }
+.hero-slide {
+  position: absolute; inset: 0;
+  background-size: cover; background-position: center;
+  opacity: 0; transition: opacity 1.8s ease;
+}
+.hero-slide.active { opacity: 1; }
+@media (prefers-reduced-motion: no-preference) {
+  .hero-slide { animation: kenburns 14s ease-in-out infinite alternate; }
+  @keyframes kenburns { from { transform: scale(1); } to { transform: scale(1.08); } }
 }
 .hero-overlay { position: absolute; inset: 0; background: var(--hero-overlay); }
 .hero-content { position: relative; color: var(--hero-text); padding: 60px 20px; max-width: 760px; }
