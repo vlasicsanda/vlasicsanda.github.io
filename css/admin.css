@@ -82,6 +82,10 @@ label.check input { width: 22px; height: 22px; margin: 0; }
 .theme-dots span { width: 22px; height: 22px; border-radius: 50%; border: 1px solid rgba(0, 0, 0, .12); }
 .theme-card h4 { margin: 0 0 2px; }
 .theme-card p { margin: 0; font-size: .8rem; color: #6b7280; }
+.theme-actions {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  margin-top: 10px; padding-top: 12px; border-top: 1px solid #e5e7eb;
+}
 
 .toast {
   position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%);

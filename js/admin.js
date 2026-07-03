@@ -633,6 +633,10 @@ function renderSettings() {
           <div class="theme-dots">${th.colors.map(cl => `<span style="background:${cl}"></span>`).join('')}</div>
           <h4>${th.name}</h4><p>${th.desc}</p>
         </div>`).join('')}</div>
+      <div class="theme-actions">
+        <button class="btn-sm" type="button" id="s-preview-theme">Isprobaj odabranu temu</button>
+        <span class="small">Otvara pregled odmah, bez spremanja i bez cekanja objave.</span>
+      </div>
       <p class="small">Promjena teme ne briše nikakav sadržaj — mijenja samo izgled.</p>
     </div>
     <div class="card">
@@ -662,11 +666,19 @@ function renderSettings() {
     <button class="btn" id="s-save">Spremi postavke</button>`;
   bindImageField('hero');
   bindImageField('about');
+  const previewThemeUrl = () => {
+    const url = new URL('index.html', location.href);
+    url.searchParams.set('tema', selTheme);
+    return url.toString();
+  };
   $('#theme-grid').addEventListener('click', e => {
     const card = e.target.closest('.theme-card');
     if (!card) return;
     selTheme = card.dataset.theme;
     $$('.theme-card').forEach(x => x.classList.toggle('selected', x === card));
+  });
+  $('#s-preview-theme').addEventListener('click', () => {
+    window.open(previewThemeUrl(), '_blank', 'noopener');
   });
   $('#s-save').addEventListener('click', async () => {
     setBusy(true);

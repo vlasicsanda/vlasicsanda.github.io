@@ -37,6 +37,9 @@ Kartica **⚙️ Postavke** → pod **Izgled stranice** klikni jednu od 5 tema
 Svaka tema je potpuno drugačiji dizajn stranice, ali ništa se ne briše —
 slike, cijene i tekstovi ostaju isti. Slobodno isprobaj sve!
 
+Ako samo zelis vidjeti kako tema izgleda, klikni **Isprobaj odabranu temu**.
+To otvara pregled odmah, bez spremanja i bez cekanja da se stranica objavi.
+
 ## Promijeniti tekstove i kontakt
 U **⚙️ Postavke** možeš promijeniti: naslov i podnaslov na naslovnici, veliku
 fotografiju, tekst „O umjetnici", e-mail, telefon, Instagram i Facebook.
