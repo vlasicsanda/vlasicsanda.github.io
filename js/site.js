@@ -11,7 +11,7 @@ const STATUS_CLASSES = {
 
 const THEME_LIST = ['white-cube', 'atelier', 'noir', 'kino', 'mozaik'];
 const THEME_LEGACY = { museum: 'white-cube', minimal: 'white-cube', mediterranean: 'atelier', dark: 'noir' };
-const ASSET_VERSION = '20260703-featuredall';
+const ASSET_VERSION = '20260703-featuredall2';
 
 const S = { settings: null, works: [], collections: [], news: [], t: {}, theme: 'white-cube' };
 const $ = s => document.querySelector(s);
