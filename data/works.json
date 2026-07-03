@@ -665,9 +665,9 @@
     "price": "",
     "priceMode": "inquiry",
     "status": "dostupna",
-    "collection": "",
+    "collection": "more",
     "image": "images/uvoz-20260703-133512-42.jpg",
-    "featured": false,
+    "featured": true,
     "created": "2026-07-03",
     "source": "https://lh3.googleusercontent.com/pw/AP1GczNN0a1ERaj4T8qQ_P0EuyPyFSZw5gkGilIi5aYNJNqBCaTRtZbUk4R4Qa0v4f_9S7RAEJHWVaUNbT1DoomsxxTIO4EGjO1FkqT4rwh69BKLYJfO-37F"
   },
