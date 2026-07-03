@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Zamijeni KORISNICKO-IME.github.io/sanda-vlasic-web svojom stvarnom adresom
-     (kasnije npr. https://sandavlasic.art) — upute u README.md -->
+<!-- Ako se adresa promijeni (npr. vlastita domena), zamijeni vlasicsanda.github.io novom adresom -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://KORISNICKO-IME.github.io/sanda-vlasic-web/</loc></url>
-  <url><loc>https://KORISNICKO-IME.github.io/sanda-vlasic-web/galerija.html</loc></url>
-  <url><loc>https://KORISNICKO-IME.github.io/sanda-vlasic-web/kolekcije.html</loc></url>
-  <url><loc>https://KORISNICKO-IME.github.io/sanda-vlasic-web/novosti.html</loc></url>
-  <url><loc>https://KORISNICKO-IME.github.io/sanda-vlasic-web/o-umjetnici.html</loc></url>
-  <url><loc>https://KORISNICKO-IME.github.io/sanda-vlasic-web/kontakt.html</loc></url>
+  <url><loc>https://vlasicsanda.github.io/</loc></url>
+  <url><loc>https://vlasicsanda.github.io/galerija.html</loc></url>
+  <url><loc>https://vlasicsanda.github.io/kolekcije.html</loc></url>
+  <url><loc>https://vlasicsanda.github.io/novosti.html</loc></url>
+  <url><loc>https://vlasicsanda.github.io/o-umjetnici.html</loc></url>
+  <url><loc>https://vlasicsanda.github.io/kontakt.html</loc></url>
 </urlset>
