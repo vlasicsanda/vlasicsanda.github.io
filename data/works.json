@@ -384,21 +384,6 @@
     "source": "https://lh3.googleusercontent.com/pw/AP1GczPvchiaU9b6-bPpUP8KsjQ_euukgfSwC_L5cJvnJrleaw0YcSVGD1zxDzEhLdKM4sy52aFTRwcvWoDi34mslbahmhl59pXHOPJ5-8mmzDEyNly6YLi_"
   },
   {
-    "id": "sv-001",
-    "title": "Jutro na rivi",
-    "code": "SV-001",
-    "dimensions": "60 × 80 cm",
-    "technique": "akril na platnu",
-    "description": "Mirno jutro na velolučkoj rivi, kad se more još nije probudilo, a svjetlo je meko i toplo.",
-    "price": "350 €",
-    "priceMode": "show",
-    "status": "dostupna",
-    "collection": "more",
-    "image": "images/uzorak-1.svg",
-    "featured": true,
-    "created": "2026-06-20"
-  },
-  {
     "id": "sv-002",
     "title": "Vela Luka u suton",
     "code": "SV-002",
