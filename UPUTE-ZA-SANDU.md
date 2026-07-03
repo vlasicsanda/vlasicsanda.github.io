@@ -11,6 +11,15 @@ na mobitelu. Prijavu napraviš samo prvi put, poslije si uvijek prijavljena.
    - Ako uključiš **Istakni na naslovnici**, slika se prikazuje na prvoj stranici.
 4. Klikni **Spremi**. Za otprilike minutu slika je na stranici. To je sve! ✅
 
+## Uvesti više slika odjednom iz Google Photosa
+1. U aplikaciji Google Photos složi album sa slikama koje želiš na stranici.
+2. Otvori album → **Dijeli** → **Kopiraj vezu**.
+3. U administraciji: kartica **🖼️ Radovi** → **⬇ Uvezi iz Google Photosa** → zalijepi vezu → **Uvezi fotografije**.
+4. Sve slike iz albuma pojave se kao „Nova slika 1, 2, 3…" — prođi kroz listu i svakoj
+   klikni **Uredi** pa upiši naziv, dimenzije, cijenu i kolekciju.
+
+Možeš kasnije u isti album dodati nove fotke i ponovno uvesti — stare se neće duplicirati. 👍
+
 ## Kad se slika proda ili rezervira
 Kartica **Radovi** → kod slike samo promijeni status u padajućem izborniku
 (Dostupna / Rezervirana / Prodana / Po narudžbi). Sprema se samo od sebe.

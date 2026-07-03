@@ -131,12 +131,23 @@ function resizeImage(file, maxDim, quality) {
   });
 }
 
-async function uploadImageFile(file) {
-  const dataUrl = await resizeImage(file);
-  const name = 'images/' + Date.now() + '-' + (slug(file.name.replace(/\.[^.]+$/, '')) || 'foto') + '.jpg';
-  await gh('PUT', name, { message: 'Nova fotografija', content: dataUrl.split(',')[1], branch: cfg.branch });
+async function uploadDataUrl(dataUrl, baseName, message) {
+  const name = 'images/' + Date.now() + '-' + (slug(baseName) || 'foto') + '.jpg';
+  await gh('PUT', name, { message: message || 'Nova fotografija', content: dataUrl.split(',')[1], branch: cfg.branch });
   return name;
 }
+
+async function uploadImageFile(file) {
+  const dataUrl = await resizeImage(file);
+  return uploadDataUrl(dataUrl, file.name.replace(/\.[^.]+$/, ''));
+}
+
+/* ===== Uvoz iz Google Photos dijeljenog albuma =====
+   Admin zapiše zahtjev u data/import-request.json; GitHub Action u repozitoriju
+   (.github/workflows/uvoz-google-photos.yml) skine fotografije i doda radove,
+   a admin dotad provjerava rezultat. */
+
+const IMPORT_REQUEST = 'data/import-request.json';
 
 /* ===== Polje za fotografiju (upload ili URL) ===== */
 
@@ -282,6 +293,7 @@ function renderWorks() {
   const c = $('#content');
   c.innerHTML = `<div class="bar">
       <button class="btn" id="add-work">＋ Dodaj rad</button>
+      <button class="btn-sm" id="import-gp">⬇ Uvezi iz Google Photosa</button>
       <input id="w-search" type="search" placeholder="Pretraži radove…">
     </div>
     <div id="w-list"></div>`;
@@ -304,6 +316,7 @@ function renderWorks() {
   };
 
   $('#add-work').addEventListener('click', () => workForm(null));
+  $('#import-gp').addEventListener('click', importForm);
   $('#w-search').addEventListener('input', draw);
 
   $('#w-list').addEventListener('click', async e => {
@@ -397,6 +410,76 @@ function workForm(existing) {
       alert('Greška pri spremanju: ' + err.message);
     } finally { setBusy(false); }
   });
+}
+
+function importForm() {
+  $('#content').innerHTML = `<div class="card">
+    <h2 style="margin-top:0">Uvoz iz Google Photosa</h2>
+    <p class="small">U aplikaciji Google Photos otvori album → <strong>Dijeli</strong> →
+      <strong>Kopiraj vezu</strong> i zalijepi je ovdje. Sve fotografije iz albuma trajno se
+      kopiraju na stranicu (već uvezene se preskaču), a nakon uvoza svakoj slici upiši naziv,
+      cijenu i kolekciju. Uvoz obično traje 1–2 minute — ne zatvaraj ovu stranicu dok traje.</p>
+    <label>Link na album<input id="gp-link" type="url" placeholder="https://photos.app.goo.gl/…" autocapitalize="none"></label>
+    <p id="gp-status" class="small"></p>
+    <div class="actions">
+      <button class="btn" id="gp-start">Uvezi fotografije</button>
+      <button class="btn gray" id="gp-cancel">Natrag</button>
+    </div>
+  </div>`;
+  $('#gp-cancel').addEventListener('click', renderTab);
+  $('#gp-start').addEventListener('click', runImport);
+}
+
+async function runImport() {
+  const link = $('#gp-link').value.trim();
+  const status = msg => { const el = $('#gp-status'); if (el) el.textContent = msg; };
+  if (!/^https:\/\/(photos\.app\.goo\.gl|photos\.google\.com)\//.test(link)) {
+    alert('Zalijepi link za dijeljenje Google Photos albuma (počinje s https://photos.app.goo.gl/…).');
+    return;
+  }
+  const startBtn = $('#gp-start');
+  startBtn.disabled = true;
+  setBusy(true);
+  try {
+    status('Pokrećem uvoz…');
+    let sha = null;
+    try { sha = (await gh('GET', IMPORT_REQUEST)).sha; } catch (e) { }
+    const body = {
+      message: 'Zahtjev za uvoz iz Google Photosa',
+      content: encB64(JSON.stringify({ url: link, status: 'pending', requestedAt: new Date().toISOString() }, null, 2)),
+      branch: cfg.branch
+    };
+    if (sha) body.sha = sha;
+    await gh('PUT', IMPORT_REQUEST, body);
+
+    const started = Date.now();
+    const deadline = started + 6 * 60 * 1000;
+    while (Date.now() < deadline) {
+      status('Uvozim fotografije — obično traje 1–2 minute… (' + Math.round((Date.now() - started) / 1000) + ' s)');
+      await new Promise(r => setTimeout(r, 8000));
+      let st;
+      try { st = JSON.parse(decB64((await gh('GET', IMPORT_REQUEST)).content)); }
+      catch (e) { continue; }
+      if (st.status === 'error') throw new Error(st.error || 'Nepoznata greška.');
+      if (st.status === 'done') {
+        const w = await gh('GET', FILES.works);
+        shas.works = w.sha;
+        db.works = JSON.parse(decB64(w.content));
+        alert('Uvezeno ' + st.imported + ' fotografija.' +
+          (st.skipped ? ' Preskočeno jer su već uvezene: ' + st.skipped + '.' : '') +
+          (st.imported ? '\n\nSada svakoj slici klikni „Uredi" i upiši naziv, cijenu i kolekciju.' : ''));
+        renderTab();
+        return;
+      }
+    }
+    throw new Error('Uvoz traje predugo. Pričekaj koju minutu pa osvježi — ako radova nema, pokušaj ponovno (već uvezene fotografije se ne dupliciraju).');
+  } catch (e) {
+    status('');
+    alert('Uvoz nije uspio: ' + e.message);
+    startBtn.disabled = false;
+  } finally {
+    setBusy(false);
+  }
 }
 
 /* ===== Kolekcije ===== */

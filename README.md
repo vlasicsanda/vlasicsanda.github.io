@@ -84,11 +84,26 @@ stvarnom adresom (a kasnije domenom).
 - Fotografija se **automatski smanji** na max 1600 px i komprimira (brzo učitavanje),
   sprema se u `images/` u repozitorij i nikad ne nestaje.
 
-**Zašto ne Google Photos:** Google Photos ne daje trajne izravne linkove na slike —
-linkovi za dijeljenje vode na Googleovu stranicu (ne na samu sliku), a izravni
-`googleusercontent` linkovi **istječu i mijenjaju se**, pa bi se slike na stranici
-s vremenom „razbile". Zato je upload u repozitorij pouzdano i dugoročno rješenje.
-Admin ipak prihvaća i URL fotografije (za slike s drugih pouzdanih adresa).
+**Uvoz iz Google Photosa:** u adminu, kartica Radovi → **„⬇ Uvezi iz Google Photosa"** —
+zalijepi se link za dijeljenje albuma i sve fotografije se **trajno kopiraju u repozitorij**
+(smanjene na 1600 px), a za svaku se kreira rad kojem se zatim upišu naziv, cijena i kolekcija.
+Već uvezene fotografije se preskaču (pamti se `source` polje), pa se isti album može
+slobodno uvoziti više puta kako se puni novim slikama.
+
+*Kako radi:* admin zapiše zahtjev u `data/import-request.json`, na što se u repozitoriju
+pokrene GitHub Action (`.github/workflows/uvoz-google-photos.yml` →
+`scripts/uvoz_google_photos.py`) koji skine fotografije i doda radove; admin za to
+vrijeme provjerava rezultat. Nema ovisnosti o vanjskim servisima osim GitHuba.
+*Tehnička ograda:* čitanje javne stranice albuma je nedokumentirano — ako Google
+promijeni format, uvoz može zakazati dok se skripta ne prilagodi. Stranica time nije
+pogođena, a ručni upload uvijek radi. Uvoz radi tek kad je repozitorij na GitHubu
+(lokalno nema Actiona).
+
+**Zašto slike ne ostaju na Google Photosu (hotlink):** Google ne daje trajne izravne
+linkove — linkovi za dijeljenje vode na Googleovu stranicu (ne na samu sliku), a izravni
+`googleusercontent` linkovi **istječu i mijenjaju se**, pa bi se galerija s vremenom
+„razbila". Zato uvoz kopira slike u repozitorij. Admin ipak prihvaća i URL fotografije
+(za slike s drugih pouzdanih adresa).
 
 ## Više jezika
 Stranica je pripremljena za hrvatski, engleski i slovenski — svi tekstovi sučelja

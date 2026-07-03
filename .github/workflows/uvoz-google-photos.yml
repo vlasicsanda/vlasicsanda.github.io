@@ -1,0 +1,29 @@
+# Kad administracija zapiše zahtjev u data/import-request.json,
+# ovaj workflow skine fotografije iz Google Photos albuma i doda ih u galeriju.
+name: Uvoz iz Google Photosa
+
+on:
+  push:
+    branches: [main]
+    paths: ['data/import-request.json']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  uvoz:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Uvezi fotografije
+        run: python3 scripts/uvoz_google_photos.py
+
+      - name: Spremi rezultat
+        run: |
+          git config user.name "uvoz-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet || git commit -m "Uvoz fotografija iz Google Photosa"
+          git push
