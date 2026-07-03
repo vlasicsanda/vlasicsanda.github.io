@@ -28,5 +28,10 @@
     "id": "miniature",
     "name": "Miniature",
     "description": ""
+  },
+  {
+    "id": "slovenija",
+    "name": "Slovenija",
+    "description": "Planine, gradovi"
   }
 ]
