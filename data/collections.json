@@ -23,5 +23,10 @@
     "id": "putovanja",
     "name": "Putovanja",
     "description": "Dojmovi i krajolici s putovanja."
+  },
+  {
+    "id": "miniature",
+    "name": "Miniature",
+    "description": ""
   }
 ]
