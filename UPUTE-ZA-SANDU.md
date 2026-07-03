@@ -32,9 +32,10 @@ Kartica **📁 Kolekcije** → **＋ Dodaj kolekciju** → upiši naziv → **Sp
 Nakon toga se nova kolekcija nudi kod dodavanja radova.
 
 ## Promijeniti izgled stranice
-Kartica **⚙️ Postavke** → pod **Izgled stranice** klikni jednu od 4 teme
-(Museum, Minimal Gallery, Mediterranean, Fine Art Dark) → dolje **Spremi postavke**.
-Ništa se ne briše — mijenjaju se samo boje i slova.
+Kartica **⚙️ Postavke** → pod **Izgled stranice** klikni jednu od 5 tema
+(White cube, Atelijer, Tamna galerija, Kino, Mozaik) → dolje **Spremi postavke**.
+Svaka tema je potpuno drugačiji dizajn stranice, ali ništa se ne briše —
+slike, cijene i tekstovi ostaju isti. Slobodno isprobaj sve!
 
 ## Promijeniti tekstove i kontakt
 U **⚙️ Postavke** možeš promijeniti: naslov i podnaslov na naslovnici, veliku

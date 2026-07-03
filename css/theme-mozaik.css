@@ -1,0 +1,49 @@
+/* Tema: Mozaik — slike rub do ruba u prirodnom omjeru
+   Masonry mreža bez kartica i potpisa; naziv se pojavi na hover.
+   Navigacija sitna i nenametljiva. */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap');
+
+:root {
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --alt: #f7f7f5;
+  --text: #141414;
+  --muted: #8c8c88;
+  --border: #ebebe8;
+  --accent: #141414;
+  --accent-contrast: #ffffff;
+  --font-heading: 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --heading-weight: 400;
+  --radius: 0px;
+  --shadow: none;
+  --hero-overlay: rgba(0, 0, 0, .3);
+  --header-bg: rgba(255, 255, 255, .95);
+  --section-pad: 56px;
+}
+
+.container { max-width: 1320px; }
+.logo { font-size: .95rem; letter-spacing: .26em; text-transform: uppercase; font-weight: 500; }
+.site-nav a { font-size: .72rem; letter-spacing: .18em; text-transform: uppercase; }
+
+.typo-hero { padding: 64px 20px 8px; }
+.typo-hero h1 { font-size: 1.15rem; font-weight: 500; letter-spacing: .3em; text-transform: uppercase; }
+.typo-hero .tagline { font-size: .72rem; letter-spacing: .26em; text-transform: uppercase; }
+
+/* mozaik: bez potpisa, naziv na hover */
+.masonry { columns: 4 220px; column-gap: 10px; }
+.masonry .work-card { margin-bottom: 10px; }
+.work-info { display: none; }
+.work-overlay {
+  display: block; position: absolute; left: 0; right: 0; bottom: 0; z-index: 2;
+  padding: 30px 12px 10px; font-size: .78rem; letter-spacing: .06em; color: #fff;
+  background: linear-gradient(transparent, rgba(10, 10, 10, .62));
+  opacity: 0; transition: opacity .3s ease;
+}
+.work-card:hover .work-overlay { opacity: 1; }
+.badge { top: 8px; left: 8px; transform: scale(.92); transform-origin: top left; }
+
+.section h2 { font-size: .9rem; font-weight: 500; letter-spacing: .28em; text-transform: uppercase; color: var(--muted); margin-bottom: 28px; }
+.btn { font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; padding: 14px 34px; }
+.filters { margin: 14px 0 22px; }
+.news-item { border-radius: 0; }

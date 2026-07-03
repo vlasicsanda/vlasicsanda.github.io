@@ -1,0 +1,61 @@
+/* Tema: White cube — kustoski minimalizam (à la ellafles / David Zwirner)
+   Bijelo, puno zraka, centrirana navigacija, slike u prirodnom omjeru,
+   muzejski potpisi ispod radova. */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500&display=swap');
+
+:root {
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --alt: #fafaf8;
+  --text: #1a1a18;
+  --muted: #9a9a94;
+  --border: #ececea;
+  --accent: #1a1a18;
+  --accent-contrast: #ffffff;
+  --font-heading: 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --heading-weight: 300;
+  --radius: 0px;
+  --shadow: none;
+  --hero-overlay: rgba(0, 0, 0, .25);
+  --header-bg: rgba(255, 255, 255, .96);
+  --section-pad: 100px;
+}
+
+/* centrirana navigacija u dva reda */
+.header-inner { flex-direction: column; gap: 8px; padding: 26px 0 20px; min-height: 0; }
+.logo { font-size: 1.05rem; font-weight: 400; letter-spacing: .38em; text-transform: uppercase; }
+.site-nav { gap: 30px; }
+.site-nav a { font-size: .7rem; letter-spacing: .24em; text-transform: uppercase; border-bottom: none; }
+.site-nav a.active { color: var(--text); }
+@media (max-width: 860px) {
+  .header-inner { flex-direction: row; padding: 0; min-height: 60px; }
+  .logo { letter-spacing: .2em; font-size: .95rem; }
+}
+
+/* tipografski hero */
+.typo-hero { padding: 130px 20px 30px; }
+.typo-hero h1 { font-size: clamp(2.6rem, 7vw, 4.8rem); font-weight: 200; letter-spacing: .1em; text-transform: uppercase; }
+.typo-hero .tagline { font-size: .74rem; letter-spacing: .32em; text-transform: uppercase; }
+
+/* rijetka mreža, muzejski potpisi */
+.works-grid { gap: 72px 46px; }
+.work-card { background: transparent; }
+.work-info { padding: 14px 0 0; }
+.work-info h3 { font-weight: 400; font-size: .95rem; margin-bottom: 2px; }
+.work-meta { font-size: .78rem; }
+.work-sub { display: none; }
+.price { font-weight: 400; font-size: .85rem; }
+
+/* diskretne oznake statusa */
+.badge { background: rgba(255, 255, 255, .88) !important; color: #1a1a18; border: 1px solid #dcdcd6; font-weight: 400; letter-spacing: .1em; }
+
+/* gumbi kao galerijski linkovi */
+.btn { background: transparent; color: var(--text); border: 1px solid var(--text); font-size: .72rem; letter-spacing: .22em; text-transform: uppercase; padding: 15px 38px; }
+.btn:hover { background: var(--text); color: var(--bg); opacity: 1; }
+
+h1, h2 { letter-spacing: .06em; }
+.section h2 { text-align: center; font-size: 1rem; font-weight: 400; letter-spacing: .3em; text-transform: uppercase; color: var(--muted); margin-bottom: 54px; }
+.detail-price { font-weight: 400; }
+.news-item { border: none; border-top: 1px solid var(--border); border-radius: 0; padding-left: 0; padding-right: 0; background: transparent; }
+.section.alt { background: var(--bg); }

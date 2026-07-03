@@ -1,0 +1,61 @@
+/* Tema: Kino — immersive fullscreen
+   Naslovnica = svaka istaknuta slika preko cijelog ekrana sa scroll-snap
+   listanjem; ostale stranice tamne s velikim slikama. */
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500&display=swap');
+
+:root {
+  --bg: #0e1216;
+  --surface: #141a20;
+  --alt: #11161b;
+  --text: #e9ecee;
+  --muted: #8d99a3;
+  --border: #232b33;
+  --accent: #dfe8ee;
+  --accent-contrast: #0e1216;
+  --font-heading: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --heading-weight: 500;
+  --radius: 2px;
+  --shadow: none;
+  --hero-overlay: rgba(5, 8, 12, .5);
+  --header-bg: rgba(14, 18, 22, .88);
+  --section-pad: 84px;
+}
+
+.logo { font-size: 1.05rem; letter-spacing: .3em; text-transform: uppercase; }
+.site-nav a { font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; }
+
+/* naslovnica: prozirno zaglavlje preko slajdova, bez podnožja */
+body[data-page="home"] .site-header { position: fixed; left: 0; right: 0; top: 0; background: linear-gradient(rgba(5, 8, 12, .55), transparent); border-bottom: none; backdrop-filter: none; }
+body[data-page="home"] .site-footer { display: none; }
+
+.kino-slides { height: 100svh; overflow-y: auto; scroll-snap-type: y mandatory; scrollbar-width: none; }
+.kino-slides::-webkit-scrollbar { display: none; }
+.kino-slide {
+  position: relative; height: 100svh;
+  scroll-snap-align: start; scroll-snap-stop: always;
+  background-size: cover; background-position: center;
+  display: flex; align-items: flex-end; color: #fff;
+}
+.kino-slide::after { content: ''; position: absolute; inset: 0; background: linear-gradient(rgba(5, 8, 12, .15) 40%, rgba(5, 8, 12, .74)); }
+.kino-info { position: relative; z-index: 2; padding: 0 6vw 9vh; }
+.kino-info h2 { font-size: clamp(1.9rem, 4.6vw, 3.4rem); margin: 0 0 6px; color: #fff; }
+.kino-info p { margin: 0; font-size: .85rem; letter-spacing: .1em; color: #c6d1d9; }
+.kino-count { position: absolute; right: 6vw; bottom: 9vh; z-index: 2; font-size: .85rem; letter-spacing: .14em; color: #c6d1d9; }
+.kino-cta { justify-content: center; align-items: center; text-align: center; background: var(--bg); }
+.kino-cta .kino-info { padding: 0 20px; }
+.kino-cta h2 { font-size: clamp(2.4rem, 6vw, 4rem); }
+.kino-hint { position: absolute; left: 50%; bottom: 3.5vh; transform: translateX(-50%); z-index: 2; color: #c6d1d9; font-size: 1.3rem; animation: kino-bob 2s ease-in-out infinite; }
+@keyframes kino-bob { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, 8px); } }
+
+/* velike slike na ostalim stranicama */
+.works-grid { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 44px; }
+.work-card { background: transparent; }
+.work-info { padding: 14px 2px 0; }
+.work-info h3 { font-size: 1.25rem; }
+.work-sub { letter-spacing: .18em; }
+
+.btn { background: transparent; color: var(--text); border: 1px solid var(--text); font-size: .72rem; letter-spacing: .22em; text-transform: uppercase; padding: 15px 36px; }
+.btn:hover { background: var(--text); color: var(--bg); opacity: 1; }
+.filters input, .filters select { background: #151b21; border-color: #2b343d; }
+.news-item { background: #131920; }

@@ -129,9 +129,27 @@ zasad jednojezičan; kad zatreba, polja u JSON-u se prošire u oblik
 - **Kalendar izložbi**: nova JSON datoteka + kartica u adminu (isti obrazac kao novosti).
 - **Video uz radove**: polje `video` (YouTube link) u `works.json`.
 
+## Teme (5 potpuno različitih dizajna)
+Tema se bira u admin Postavkama; svaka je zaseban dizajn (layout + tipografija + ponašanje),
+ne samo druge boje. Promjena teme ne dira sadržaj.
+
+1. **White cube** — kustoski minimalizam: bijelo, centrirana navigacija, slike u
+   prirodnom omjeru s muzejskim potpisima. (zadana)
+2. **Atelijer** — editorial/časopisni stil: krem podloga, ogroman serifni naslov preko
+   slike, numerirane kolekcije, asimetrična mreža.
+3. **Tamna galerija** — gotovo crna pozadina, zlatni akcenti, radovi u tankim
+   odmaknutim okvirima.
+4. **Kino** — naslovnica su istaknuti radovi preko cijelog ekrana sa snap-listanjem.
+5. **Mozaik** — masonry mreža rub do ruba u prirodnom omjeru, naziv na hover.
+
+Sve teme dijele premium detalje: lightbox preko cijelog ekrana (klik na sliku na
+stranici rada, sa strelicama i tipkovnicom), scroll-reveal animacije (poštuju
+`prefers-reduced-motion`), spori hover zoom.
+
 ## Tehničke napomene
 - Bez build koraka i bez ovisnosti — čisti HTML/CSS/JS.
-- Teme se mijenjaju u admin Postavkama (mijenja se samo `settings.json` → drugi CSS).
+- Teme se mijenjaju u admin Postavkama (mijenja se samo `settings.json`); stari nazivi
+  tema (museum/minimal/mediterranean/dark) automatski se mapiraju na nove.
 - Nakon spremanja u adminu, GitHub Pages objavi promjenu za ~1 minutu.
 - SEO: svaka stranica ima meta title/description, OG oznake na naslovnici,
   sitemap.xml i robots.txt. Za detalje radova title/description se postavljaju dinamički.

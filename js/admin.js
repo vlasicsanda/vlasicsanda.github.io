@@ -23,11 +23,13 @@ const PRICE_MODES = {
 };
 
 const THEMES = [
-  { id: 'museum', name: 'Museum', desc: 'Elegantno, puno prostora, fokus na djela', colors: ['#faf8f3', '#96794c', '#211d17'] },
-  { id: 'minimal', name: 'Minimal Gallery', desc: 'Bijela pozadina, čiste linije', colors: ['#ffffff', '#141414', '#767676'] },
-  { id: 'mediterranean', name: 'Mediterranean', desc: 'Svijetle boje, ugođaj mora i Dalmacije', colors: ['#f8faf9', '#2f6f8f', '#d9a441'] },
-  { id: 'dark', name: 'Fine Art Dark', desc: 'Tamna pozadina, premium izgled', colors: ['#101114', '#c9a86a', '#eae7e0'] }
+  { id: 'white-cube', name: 'White cube', desc: 'Kustoski minimalizam — bijelo, zrak, fokus na djela', colors: ['#ffffff', '#1a1a18', '#9a9a94'] },
+  { id: 'atelier', name: 'Atelijer', desc: 'Editorial stil — veliki serif, asimetrija, krem tonovi', colors: ['#f6f2ea', '#241f16', '#c2683f'] },
+  { id: 'noir', name: 'Tamna galerija', desc: 'Slike pod reflektorom — tamno i zlatno', colors: ['#121212', '#c9a86a', '#e8e2d6'] },
+  { id: 'kino', name: 'Kino', desc: 'Naslovnica: svaka slika preko cijelog ekrana', colors: ['#0e1216', '#dfe8ee', '#8d99a3'] },
+  { id: 'mozaik', name: 'Mozaik', desc: 'Slike rub do ruba u prirodnom omjeru', colors: ['#ffffff', '#141414', '#c2683f'] }
 ];
+const THEME_LEGACY = { museum: 'white-cube', minimal: 'white-cube', mediterranean: 'atelier', dark: 'noir' };
 
 let cfg = null;
 try { cfg = JSON.parse(localStorage.getItem('sv-admin')); } catch (e) { }
@@ -621,7 +623,8 @@ function newsForm(existing) {
 
 function renderSettings() {
   const st = db.settings;
-  let selTheme = st.theme;
+  let selTheme = THEME_LEGACY[st.theme] || st.theme;
+  if (!THEMES.some(t => t.id === selTheme)) selTheme = 'white-cube';
   $('#content').innerHTML = `
     <div class="card">
       <h2 style="margin-top:0">Izgled stranice</h2>

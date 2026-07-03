@@ -105,11 +105,11 @@ p { margin: 0 0 1em; }
 .work-card {
   background: var(--surface); border-radius: var(--radius);
   overflow: hidden; box-shadow: var(--shadow);
-  transition: transform .2s;
 }
-.work-card:hover { transform: translateY(-4px); }
 .work-image { position: relative; aspect-ratio: 4 / 5; overflow: hidden; background: var(--alt); }
-.work-image img { width: 100%; height: 100%; object-fit: cover; }
+.work-image img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s ease; }
+.work-card:hover .work-image img { transform: scale(1.03); }
+.work-overlay { display: none; }
 .work-info { padding: 14px 16px 18px; }
 .work-info h3 { margin: 0 0 4px; }
 .work-meta { font-size: .85rem; color: var(--muted); margin: 0; }
@@ -200,3 +200,45 @@ p { margin: 0 0 1em; }
 .footer-inner { display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; }
 .footer-inner a { color: var(--muted); }
 .footer-inner a:hover { color: var(--text); }
+
+/* ===== Prirodni omjer slika (teme: white-cube, atelier) ===== */
+.natural .work-image { aspect-ratio: auto; }
+.natural .work-image img { height: auto; }
+
+/* ===== Masonry mreža (tema: mozaik) ===== */
+.masonry { columns: 3 260px; column-gap: 22px; }
+.masonry .work-card { display: block; break-inside: avoid; margin-bottom: 22px; }
+.masonry .work-image { aspect-ratio: auto; }
+.masonry .work-image img { height: auto; }
+
+/* ===== Tipografski hero (teme bez velike fotografije) ===== */
+.typo-hero { padding: 110px 20px 20px; text-align: center; }
+.typo-hero h1 { margin: 0 0 10px; }
+.typo-hero .tagline { color: var(--muted); margin: 0 0 26px; }
+
+/* ===== Scroll-reveal animacije ===== */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal { opacity: 0; transform: translateY(20px); transition: opacity .7s ease, transform .7s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+  #main { animation: page-in .5s ease; }
+  @keyframes page-in { from { opacity: 0; } to { opacity: 1; } }
+}
+
+/* ===== Lightbox ===== */
+.lightbox {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(8, 8, 8, .95);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; padding: 30px;
+}
+.lightbox img { max-width: 92vw; max-height: 80vh; object-fit: contain; }
+.lb-caption { color: #cfcbc2; font-size: .9rem; margin-top: 14px; text-align: center; max-width: 80vw; }
+.lightbox button {
+  position: absolute; background: none; border: none; color: #fff;
+  font-size: 2.2rem; line-height: 1; cursor: pointer; padding: 10px 16px; opacity: .65;
+}
+.lightbox button:hover { opacity: 1; }
+.lb-close { top: 12px; right: 14px; }
+.lb-prev { left: 6px; top: 50%; transform: translateY(-50%); }
+.lb-next { right: 6px; top: 50%; transform: translateY(-50%); }
+.work-detail-image img { cursor: zoom-in; }

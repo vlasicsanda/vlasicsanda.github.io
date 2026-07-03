@@ -9,7 +9,10 @@ const STATUS_CLASSES = {
   'po-narudzbi': 'badge-order'
 };
 
-const S = { settings: null, works: [], collections: [], news: [], t: {} };
+const THEME_LIST = ['white-cube', 'atelier', 'noir', 'kino', 'mozaik'];
+const THEME_LEGACY = { museum: 'white-cube', minimal: 'white-cube', mediterranean: 'atelier', dark: 'noir' };
+
+const S = { settings: null, works: [], collections: [], news: [], t: {}, theme: 'white-cube' };
 const $ = s => document.querySelector(s);
 
 function esc(v) {
@@ -65,13 +68,67 @@ function priceHTML(w) {
 
 function workCard(w) {
   return `<a class="work-card" href="rad.html?id=${encodeURIComponent(w.id)}">
-    <div class="work-image"><img src="${esc(workImg(w))}" alt="${esc(w.title)}" loading="lazy">${statusBadge(w)}</div>
+    <div class="work-image"><img src="${esc(workImg(w))}" alt="${esc(w.title)}" loading="lazy">${statusBadge(w)}<span class="work-overlay">${esc(w.title)}</span></div>
     <div class="work-info">
       <h3>${esc(w.title)}</h3>
       <p class="work-meta">${esc(w.dimensions || '')}${w.technique ? ' · ' + esc(w.technique) : ''}</p>
       <p class="work-sub">${esc(collectionName(w.collection))}</p>
       ${priceHTML(w)}
     </div></a>`;
+}
+
+function galleryGridClass() {
+  if (S.theme === 'mozaik') return 'masonry';
+  return 'works-grid' + (S.theme === 'white-cube' || S.theme === 'atelier' ? ' natural' : '');
+}
+
+function reveal() {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) return;
+  const io = new IntersectionObserver(entries => entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  }), { threshold: .08 });
+  document.querySelectorAll('.work-card, .news-item, .collection-card').forEach(el => {
+    if (el.classList.contains('reveal')) return;
+    el.classList.add('reveal');
+    io.observe(el);
+  });
+}
+
+/* ===== Lightbox ===== */
+
+function openLightbox(startId) {
+  const list = S.works;
+  let i = list.findIndex(w => w.id === startId);
+  if (i < 0) return;
+  const el = document.createElement('div');
+  el.className = 'lightbox';
+  const close = () => {
+    el.remove();
+    document.removeEventListener('keydown', onKey);
+    document.body.style.overflow = '';
+  };
+  const step = d => { i = (i + d + list.length) % list.length; draw(); };
+  const onKey = e => {
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowLeft') step(-1);
+    if (e.key === 'ArrowRight') step(1);
+  };
+  const draw = () => {
+    const w = list[i];
+    el.innerHTML = `<button class="lb-close" aria-label="Zatvori">×</button>
+      <button class="lb-prev" aria-label="Prethodna">‹</button>
+      <img src="${esc(workImg(w))}" alt="${esc(w.title)}">
+      <button class="lb-next" aria-label="Sljedeća">›</button>
+      <div class="lb-caption">${esc(w.title)}${w.dimensions ? ' · ' + esc(w.dimensions) : ''}${w.technique ? ' · ' + esc(w.technique) : ''}</div>`;
+    el.querySelector('.lb-close').addEventListener('click', close);
+    el.querySelector('.lb-prev').addEventListener('click', e => { e.stopPropagation(); step(-1); });
+    el.querySelector('.lb-next').addEventListener('click', e => { e.stopPropagation(); step(1); });
+  };
+  el.addEventListener('click', e => { if (e.target === el) close(); });
+  document.addEventListener('keydown', onKey);
+  document.body.style.overflow = 'hidden';
+  draw();
+  document.body.appendChild(el);
 }
 
 function setMeta(name, content) {
@@ -117,34 +174,95 @@ function renderFooter() {
 
 /* ===== Stranice ===== */
 
-function renderHome() {
-  const featured = S.works.filter(w => w.featured);
-  const show = (featured.length ? featured : S.works).slice(0, 6);
+function newsTeasers() {
   const news = S.news.slice()
     .sort((a, b) => String(b.date).localeCompare(String(a.date))).slice(0, 3);
-  $('#main').innerHTML = `
-    <section class="hero" style="background-image:url('${esc(S.settings.heroImage)}')">
-      <div class="hero-overlay"></div>
-      <div class="hero-content">
-        <h1>${esc(S.settings.heroTitle || S.settings.siteTitle)}</h1>
-        <p>${esc(S.settings.heroSubtitle || '')}</p>
-        <a class="btn" href="galerija.html">${t('viewGallery')}</a>
+  if (!news.length) return '';
+  return `<section class="section alt"><div class="container">
+    <h2>${t('latestNews')}</h2>
+    <div class="news-teaser-grid">${news.map(n =>
+      `<a class="news-item" href="novost.html?id=${encodeURIComponent(n.id)}">
+        <span class="date">${fmtDate(n.date)}</span>
+        <h3>${esc(n.title)}</h3>
+        <p class="muted">${excerpt(n.text, 120)}</p>
+      </a>`).join('')}</div>
+  </div></section>`;
+}
+
+function featuredSection(show) {
+  const grid = S.theme === 'atelier' ? 'at-works natural' : galleryGridClass();
+  return `<section class="section"><div class="container">
+    <h2>${t('featuredWorks')}</h2>
+    ${show.length ? `<div class="${grid}">${show.map(workCard).join('')}</div>` : `<p class="muted">${t('galleryEmpty')}</p>`}
+    <p class="center" style="margin:44px 0 0"><a class="btn btn-outline" href="galerija.html">${t('allWorks')}</a></p>
+  </div></section>`;
+}
+
+function renderHome() {
+  const st = S.settings;
+  const featured = S.works.filter(w => w.featured);
+  const show = (featured.length ? featured : S.works).slice(0, S.theme === 'mozaik' ? 12 : 6);
+
+  if (S.theme === 'kino') {
+    const slides = (featured.length ? featured : S.works).slice(0, 6).filter(w => w.image);
+    $('#main').innerHTML = `<div class="kino-slides">
+      ${slides.map((w, i) => `<a class="kino-slide" href="rad.html?id=${encodeURIComponent(w.id)}" style="background-image:url('${esc(w.image)}')">
+        <div class="kino-info"><h2>${esc(w.title)}</h2>
+          <p>${[w.dimensions, w.technique].filter(Boolean).map(esc).join(' · ')}${priceHTML(w) ? ' · ' : ''}${priceHTML(w)}</p></div>
+        <span class="kino-count">${i + 1} / ${slides.length}</span>
+        ${i === 0 ? '<span class="kino-hint">▾</span>' : ''}
+      </a>`).join('')}
+      <div class="kino-slide kino-cta">
+        <div class="kino-info">
+          <h2>${esc(st.heroTitle || st.siteTitle)}</h2>
+          <p style="margin-bottom:26px">${esc(st.heroSubtitle || '')}</p>
+          <a class="btn" href="galerija.html">${t('viewGallery')}</a>
+        </div>
+      </div>
+    </div>`;
+    return;
+  }
+
+  let hero;
+  if (S.theme === 'atelier') {
+    const parts = String(st.heroTitle || st.siteTitle).split(' ');
+    const heroWork = show[0];
+    hero = `<section class="at-hero container">
+      <p class="kicker">${esc(st.tagline || '')}</p>
+      <h1 class="at-name">${parts.map(esc).join('<br>')}</h1>
+      <div class="at-hero-grid">
+        ${heroWork ? `<a class="at-hero-img" href="rad.html?id=${encodeURIComponent(heroWork.id)}"><img src="${esc(workImg(heroWork))}" alt="${esc(heroWork.title)}"></a>` : '<div></div>'}
+        <div class="at-hero-side">
+          <p>${esc(st.heroSubtitle || '')}</p>
+          <a class="at-link" href="galerija.html">${t('viewGallery')} →</a>
+        </div>
       </div>
     </section>
-    <section class="section"><div class="container">
-      <h2>${t('featuredWorks')}</h2>
-      ${show.length ? `<div class="works-grid">${show.map(workCard).join('')}</div>` : `<p class="muted">${t('galleryEmpty')}</p>`}
-      <p class="center" style="margin:36px 0 0"><a class="btn btn-outline" href="galerija.html">${t('allWorks')}</a></p>
-    </div></section>
-    ${news.length ? `<section class="section alt"><div class="container">
-      <h2>${t('latestNews')}</h2>
-      <div class="news-teaser-grid">${news.map(n =>
-        `<a class="news-item" href="novost.html?id=${encodeURIComponent(n.id)}">
-          <span class="date">${fmtDate(n.date)}</span>
-          <h3>${esc(n.title)}</h3>
-          <p class="muted">${excerpt(n.text, 120)}</p>
-        </a>`).join('')}</div>
-    </div></section>` : ''}`;
+    <section class="section" style="padding-top:30px"><div class="container">
+      <ol class="at-collections">${S.collections.map((c, i) => {
+        const cnt = S.works.filter(w => w.collection === c.id).length;
+        return `<li><a href="galerija.html?kolekcija=${encodeURIComponent(c.id)}">
+          <span class="num">${String(i + 1).padStart(2, '0')}</span>${esc(c.name)}
+          <span class="cnt">${cnt} ${t('worksInCollection')}</span></a></li>`;
+      }).join('')}</ol>
+    </div></section>`;
+  } else if (S.theme === 'noir') {
+    hero = `<section class="hero" style="background-image:url('${esc(st.heroImage)}')">
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <h1>${esc(st.heroTitle || st.siteTitle)}</h1>
+        <p>${esc(st.heroSubtitle || '')}</p>
+        <a class="btn" href="galerija.html">${t('viewGallery')}</a>
+      </div>
+    </section>`;
+  } else {
+    hero = `<section class="typo-hero">
+      <h1>${esc(st.heroTitle || st.siteTitle)}</h1>
+      <p class="tagline">${esc(st.heroSubtitle || '')}</p>
+    </section>`;
+  }
+
+  $('#main').innerHTML = hero + featuredSection(show) + newsTeasers();
 }
 
 function renderGallery() {
@@ -157,7 +275,7 @@ function renderGallery() {
       <select id="f-s"><option value="">${t('allStatuses')}</option>
         ${Object.keys(STATUS_CLASSES).map(s => `<option value="${s}">${t('status_' + s)}</option>`).join('')}</select>
     </div>
-    <div id="works" class="works-grid"></div>
+    <div id="works" class="${galleryGridClass()}"></div>
     <p id="no-results" class="muted" hidden>${t('noResults')}</p>
   </div></section>`;
 
@@ -171,6 +289,7 @@ function renderGallery() {
       (!term || String(w.title).toLowerCase().includes(term) || String(w.code).toLowerCase().includes(term)));
     $('#works').innerHTML = list.map(workCard).join('');
     $('#no-results').hidden = list.length > 0;
+    reveal();
   };
   [q, c, s].forEach(el => el.addEventListener('input', apply));
   apply();
@@ -197,7 +316,7 @@ function renderWork() {
   $('#main').innerHTML = `<section class="section"><div class="container">
     <p><a class="muted" href="galerija.html">${t('backToGallery')}</a></p>
     <div class="work-detail">
-      <div class="work-detail-image"><img src="${esc(workImg(w))}" alt="${esc(w.title)}">${statusBadge(w)}</div>
+      <div class="work-detail-image"><img id="work-zoom" src="${esc(workImg(w))}" alt="${esc(w.title)}">${statusBadge(w)}</div>
       <div>
         <h1>${esc(w.title)}</h1>
         <p>${statusBadge(w, true)}</p>
@@ -208,6 +327,7 @@ function renderWork() {
       </div>
     </div>
   </div></section>`;
+  $('#work-zoom').addEventListener('click', () => openLightbox(w.id));
 }
 
 function renderCollections() {
@@ -315,11 +435,14 @@ function renderContact() {
   }
   S.t = (typeof I18N !== 'undefined' && I18N[S.settings.language]) || I18N.hr;
 
+  let theme = S.settings.theme || 'white-cube';
+  theme = THEME_LEGACY[theme] || theme;
+  if (!THEME_LIST.includes(theme)) theme = 'white-cube';
+  S.theme = theme;
+  document.body.classList.add('theme-' + theme);
   const link = document.getElementById('theme-css');
-  if (link && S.settings.theme) {
-    link.href = 'css/theme-' + S.settings.theme + '.css';
-    try { localStorage.setItem('sv-theme', S.settings.theme); } catch (e) { }
-  }
+  if (link) link.href = 'css/theme-' + theme + '.css';
+  try { localStorage.setItem('sv-theme', theme); } catch (e) { }
 
   S.works.sort((a, b) => String(b.created || '').localeCompare(String(a.created || '')));
 
@@ -335,4 +458,5 @@ function renderContact() {
     about: renderAbout,
     contact: renderContact
   }[document.body.dataset.page] || function () { })();
+  reveal();
 })();

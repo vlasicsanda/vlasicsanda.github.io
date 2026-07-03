@@ -1,0 +1,55 @@
+/* Tema: Tamna galerija (noir) — slike pod reflektorom
+   Gotovo crna pozadina, zlatni akcenti, radovi u tankim odmaknutim
+   okvirima kao u noćnoj galeriji. */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Manrope:wght@400;500&display=swap');
+
+:root {
+  --bg: #121212;
+  --surface: #121212;
+  --alt: #171717;
+  --text: #e8e2d6;
+  --muted: #8f8b81;
+  --border: #2b2a26;
+  --accent: #c9a86a;
+  --accent-contrast: #15130e;
+  --font-heading: 'Playfair Display', Georgia, serif;
+  --font-body: 'Manrope', system-ui, sans-serif;
+  --heading-weight: 500;
+  --radius: 0px;
+  --shadow: none;
+  --hero-overlay: rgba(0, 0, 0, .6);
+  --header-bg: rgba(18, 18, 18, .92);
+  --section-pad: 96px;
+}
+
+.logo { font-size: 1.5rem; color: var(--text); }
+.site-nav a { font-size: .72rem; letter-spacing: .22em; text-transform: uppercase; }
+.site-nav a.active { border-bottom-color: var(--accent); }
+
+.hero-content h1 { font-size: clamp(2.8rem, 7vw, 4.8rem); }
+.hero-content p { color: #cfc9bb; }
+
+/* radovi u odmaknutim okvirima */
+.works-grid { gap: 56px 40px; }
+.work-card { background: transparent; overflow: visible; }
+.work-image { outline: 1px solid #34322c; outline-offset: 9px; margin: 10px; }
+.work-info { padding: 20px 10px 0; text-align: center; }
+.work-info h3 { font-size: 1.1rem; }
+.work-meta, .work-sub { font-size: .74rem; letter-spacing: .14em; }
+.price { color: var(--accent); font-weight: 400; letter-spacing: .08em; }
+.detail-price { color: var(--accent); font-weight: 400; }
+
+.badge { font-weight: 500; }
+
+.btn { background: transparent; color: var(--accent); border: 1px solid var(--accent); font-size: .72rem; letter-spacing: .22em; text-transform: uppercase; padding: 15px 36px; }
+.btn:hover { background: var(--accent); color: var(--accent-contrast); opacity: 1; }
+.btn-outline { color: var(--text); border-color: #4a463d; }
+
+.section h2 { text-align: center; color: var(--text); margin-bottom: 50px; }
+.section.alt { background: var(--alt); }
+.work-detail-image img { outline: 1px solid #34322c; outline-offset: 10px; }
+.work-detail-image { padding: 11px; }
+.work-detail-image .badge { top: 21px; left: 21px; }
+.news-item { background: #161616; }
+.filters input, .filters select { background: #1a1a1a; border-color: #33312c; }
+.collection-card { border: 1px solid #2b2a26; }

@@ -1,0 +1,68 @@
+/* Tema: Atelijer — editorial časopisni stil
+   Krem podloga, ogromni serifni naslovi koji prelaze preko slika,
+   numerirane kolekcije, asimetrična mreža radova. */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Karla:wght@400;500&display=swap');
+
+:root {
+  --bg: #f6f2ea;
+  --surface: #fdfbf6;
+  --alt: #efe9dc;
+  --text: #241f16;
+  --muted: #8f8878;
+  --border: #e2dbca;
+  --accent: #241f16;
+  --accent-contrast: #f6f2ea;
+  --font-heading: 'Fraunces', Georgia, serif;
+  --font-body: 'Karla', system-ui, sans-serif;
+  --heading-weight: 500;
+  --radius: 0px;
+  --shadow: none;
+  --hero-overlay: rgba(30, 24, 12, .35);
+  --header-bg: rgba(246, 242, 234, .93);
+  --section-pad: 90px;
+}
+
+.logo { font-size: 1.5rem; }
+.site-nav a { font-size: .78rem; letter-spacing: .16em; text-transform: uppercase; }
+
+/* editorial hero */
+.at-hero { padding: 84px 20px 40px; }
+.kicker { font-size: .7rem; letter-spacing: .3em; text-transform: uppercase; color: var(--muted); margin: 0 0 12px; }
+.at-name { font-size: clamp(3.2rem, 10vw, 6.6rem); line-height: .95; margin: 0; position: relative; z-index: 2; }
+.at-hero-grid { display: grid; grid-template-columns: 3fr 2fr; gap: 44px; align-items: start; }
+.at-hero-img { position: relative; z-index: 1; margin-top: -60px; margin-left: clamp(0px, 12vw, 170px); }
+.at-hero-side { padding-top: 26px; }
+.at-hero-side p { color: var(--muted); line-height: 1.8; }
+.at-link { font-size: .72rem; letter-spacing: .22em; text-transform: uppercase; border-bottom: 1px solid var(--text); padding-bottom: 3px; }
+@media (max-width: 760px) {
+  .at-hero-grid { grid-template-columns: 1fr; gap: 24px; }
+  .at-hero-img { margin: 10px 0 0; }
+}
+
+/* numerirane kolekcije */
+.at-collections { list-style: none; margin: 0; padding: 0; }
+.at-collections li { border-top: 1px solid var(--border); }
+.at-collections li:last-child { border-bottom: 1px solid var(--border); }
+.at-collections a { display: flex; align-items: baseline; gap: 26px; padding: 24px 6px; font-family: var(--font-heading); font-size: clamp(1.4rem, 3.4vw, 2.1rem); transition: padding-left .25s ease; }
+.at-collections a:hover { padding-left: 20px; }
+.at-collections .num { font-family: var(--font-body); font-size: .78rem; color: var(--muted); }
+.at-collections .cnt { margin-left: auto; font-family: var(--font-body); font-size: .78rem; color: var(--muted); }
+
+/* asimetrična editorial mreža */
+.at-works { display: grid; grid-template-columns: repeat(6, 1fr); gap: 52px 34px; align-items: start; }
+.at-works .work-card:nth-child(4n+1) { grid-column: span 4; }
+.at-works .work-card:nth-child(4n+2) { grid-column: span 2; margin-top: 64px; }
+.at-works .work-card:nth-child(4n+3) { grid-column: span 2; margin-top: -30px; }
+.at-works .work-card:nth-child(4n+4) { grid-column: span 4; }
+@media (max-width: 760px) {
+  .at-works { grid-template-columns: 1fr; gap: 40px; }
+  .at-works .work-card { grid-column: span 1 !important; margin-top: 0 !important; }
+}
+
+.work-card { background: transparent; }
+.work-info { padding: 12px 0 0; }
+.work-info h3 { font-size: 1.15rem; }
+.work-sub { letter-spacing: .2em; }
+.btn { font-size: .74rem; letter-spacing: .2em; text-transform: uppercase; padding: 15px 36px; }
+.section h2 { font-size: clamp(1.6rem, 3.5vw, 2.4rem); }
+.news-item { background: transparent; border: none; border-top: 1px solid var(--border); border-radius: 0; padding-left: 0; padding-right: 0; }
