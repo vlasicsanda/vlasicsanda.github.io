@@ -105,9 +105,9 @@
     "price": "",
     "priceMode": "inquiry",
     "status": "dostupna",
-    "collection": "",
+    "collection": "more",
     "image": "images/uvoz-07.jpg",
-    "featured": false,
+    "featured": true,
     "created": "2026-07-03",
     "source": "https://lh3.googleusercontent.com/pw/AP1GczMiN2CSlG4sjxF9QTYQ2afknqvUiNqm3C74BZ54BukOqgtJ-CuP3V4VyzLU_wypMFoeul7Act81U6-MYkrPLP3-hNPRRXQGRfxU--69l0IH66kkayI6"
   },
