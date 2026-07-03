@@ -11,7 +11,7 @@ const STATUS_CLASSES = {
 
 const THEME_LIST = ['white-cube', 'atelier', 'noir', 'kino', 'mozaik'];
 const THEME_LEGACY = { museum: 'white-cube', minimal: 'white-cube', mediterranean: 'atelier', dark: 'noir' };
-const ASSET_VERSION = '20260703-tune';
+const ASSET_VERSION = '20260703-featuredall';
 
 const S = { settings: null, works: [], collections: [], news: [], t: {}, theme: 'white-cube' };
 const $ = s => document.querySelector(s);
@@ -101,16 +101,20 @@ function reveal() {
 /* ===== Hero: slideshow + Ken Burns + parallax ===== */
 
 function heroSlides() {
+  const featuredImages = S.works.filter(w => w.featured && w.image).map(w => w.image);
+  if (featuredImages.length) {
+    return Array.from(new Set(featuredImages));
+  }
   const imgs = [];
   if (S.settings.heroImage) imgs.push(S.settings.heroImage);
-  S.works.filter(w => w.featured && w.image).forEach(w => imgs.push(w.image));
-  return Array.from(new Set(imgs)).slice(0, 6);
+  S.works.filter(w => w.image).slice(0, 8).forEach(w => imgs.push(w.image));
+  return Array.from(new Set(imgs));
 }
 
 function heroWorks() {
   const withImages = S.works.filter(w => w.image);
   const featured = withImages.filter(w => w.featured);
-  return (featured.length ? featured : withImages).slice(0, 6);
+  return featured.length ? featured : withImages.slice(0, 8);
 }
 
 function heroMeta(w) {
@@ -125,7 +129,7 @@ function slideLayers(images) {
 
 function landingThumbs(items, cls) {
   if (!items.length) return '';
-  return `<div class="${cls}">${items.slice(0, 5).map((w, i) =>
+  return `<div class="${cls}">${items.map((w, i) =>
     `<a href="rad.html?id=${encodeURIComponent(w.id)}" style="--i:${i}">
       <img src="${esc(workImg(w))}" alt="${esc(w.title)}">
       <span>${esc(w.title)}</span>
@@ -265,10 +269,10 @@ function featuredSection(show) {
 function renderHome() {
   const st = S.settings;
   const featured = S.works.filter(w => w.featured);
-  const show = (featured.length ? featured : S.works).slice(0, S.theme === 'mozaik' ? 12 : 6);
+  const show = featured.length ? featured : S.works.slice(0, S.theme === 'mozaik' ? 12 : 6);
 
   if (S.theme === 'kino') {
-    const slides = (featured.length ? featured : S.works).slice(0, 6).filter(w => w.image);
+    const slides = (featured.length ? featured : S.works.filter(w => w.image).slice(0, 6)).filter(w => w.image);
     $('#main').innerHTML = `<div class="kino-slides">
       ${slides.map((w, i) => `<a class="kino-slide" href="rad.html?id=${encodeURIComponent(w.id)}" style="background-image:url('${esc(w.image)}')">
         <div class="kino-info"><h2>${esc(w.title)}</h2>
@@ -336,7 +340,7 @@ function renderHome() {
 function renderHomeWow() {
   const st = S.settings;
   const featured = S.works.filter(w => w.featured);
-  const show = (featured.length ? featured : S.works).slice(0, S.theme === 'mozaik' ? 12 : 6);
+  const show = featured.length ? featured : S.works.slice(0, S.theme === 'mozaik' ? 12 : 6);
   const heroItems = heroWorks();
   const heroImages = heroSlides();
   const primary = heroItems[0];
@@ -402,7 +406,7 @@ function renderHomeWow() {
         <strong>${esc(primary.title)}</strong>
         <em>${esc(meta || 'Akvarel')}</em>
       </a>` : ''}
-      <div class="mozaik-count" aria-hidden="true">${String(tiles.length).padStart(2, '0')} odabranih radova</div>
+      <div class="mozaik-count" aria-hidden="true">${String(heroItems.length).padStart(2, '0')} odabranih radova</div>
     </section>`;
   } else {
     hero = `<section class="typo-hero">
