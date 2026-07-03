@@ -36,6 +36,11 @@ try { cfg = JSON.parse(localStorage.getItem('sv-admin')); } catch (e) { }
 
 const db = {}, shas = {}, pending = {};
 let tab = 'works';
+const workUi = {
+  q: '', status: 'all', collection: 'all', image: 'all',
+  completion: 'all', featured: 'all', sort: 'created', dir: 'desc'
+};
+const workDrafts = {};
 
 const app = document.getElementById('app');
 const $ = s => document.querySelector(s);
@@ -286,12 +291,14 @@ function renderMain() {
 function renderTab() {
   Object.keys(pending).forEach(k => delete pending[k]);
   $$('#tabs button').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
+  const content = $('#content');
+  if (content) content.classList.toggle('wide-content', tab === 'works');
   ({ works: renderWorks, collections: renderCollections, news: renderNews, settings: renderSettings }[tab])();
 }
 
 /* ===== Radovi ===== */
 
-function renderWorks() {
+function renderWorksLegacy() {
   const c = $('#content');
   c.innerHTML = `<div class="bar">
       <button class="btn" id="add-work">＋ Dodaj rad</button>
@@ -345,6 +352,331 @@ function renderWorks() {
     try { await saveFile('works', 'Promijenjen status: ' + w.title + ' → ' + STATUS_NAMES[w.status]); }
     catch (err) { alert('Greška pri spremanju: ' + err.message); }
     finally { setBusy(false); }
+  });
+
+  draw();
+}
+
+function workDraftView(w) {
+  return Object.assign({}, w, workDrafts[w.id] || {});
+}
+
+function hasWorkDraft(id) {
+  return !!workDrafts[id] && Object.keys(workDrafts[id]).length > 0;
+}
+
+function workMissing(w) {
+  const missing = [];
+  const title = String(w.title || '').trim();
+  if (!title || /^nova slika\b/i.test(title)) missing.push('naziv');
+  if (!w.image) missing.push('fotografija');
+  if (!w.collection) missing.push('kolekcija');
+  if (!String(w.dimensions || '').trim()) missing.push('dimenzije');
+  if (!String(w.technique || '').trim()) missing.push('tehnika');
+  if (w.priceMode === 'show' && !String(w.price || '').trim()) missing.push('cijena');
+  return missing;
+}
+
+function completionBadge(missing) {
+  return missing.length
+    ? `<span class="state-badge state-bad">Nedostaje: ${esc(missing.join(', '))}</span>`
+    : '<span class="state-badge state-good">Gotovo</span>';
+}
+
+function workSearchText(w) {
+  return [
+    w.title, w.code, w.dimensions, w.technique, w.description, w.price, w.id,
+    STATUS_NAMES[w.status], collectionName(w.collection), w.featured ? 'istaknuto naslovnica' : ''
+  ].filter(Boolean).join(' ').toLowerCase();
+}
+
+function workSortValue(w, key) {
+  if (key === 'title') return String(w.title || '');
+  if (key === 'code') return String(w.code || '');
+  if (key === 'collection') return collectionName(w.collection) || '';
+  if (key === 'status') return STATUS_NAMES[w.status] || w.status || '';
+  if (key === 'complete') return workMissing(w).length;
+  if (key === 'image') return w.image ? 1 : 0;
+  if (key === 'featured') return w.featured ? 1 : 0;
+  if (key === 'created') return String(w.created || '');
+  return String(w.title || '');
+}
+
+function sortIndicator(key) {
+  if (workUi.sort !== key) return '';
+  return workUi.dir === 'asc' ? ' ↑' : ' ↓';
+}
+
+function updateWorksDirtyUi() {
+  const count = Object.keys(workDrafts).filter(hasWorkDraft).length;
+  const save = $('#save-work-drafts');
+  const discard = $('#discard-work-drafts');
+  const note = $('#work-dirty-count');
+  if (save) save.disabled = count === 0;
+  if (discard) discard.disabled = count === 0;
+  if (note) note.textContent = count ? count + ' nespremljenih redova' : 'Nema nespremljenih promjena';
+  $$('#w-list tr[data-id]').forEach(tr => tr.classList.toggle('dirty', hasWorkDraft(tr.dataset.id)));
+}
+
+function cleanWorkPatch(id) {
+  const patch = {};
+  Object.entries(workDrafts[id] || {}).forEach(([field, value]) => {
+    patch[field] = typeof value === 'string' ? value.trim() : value;
+  });
+  return patch;
+}
+
+function setWorkDraft(id, field, value) {
+  const original = db.works.find(w => w.id === id);
+  if (!original) return;
+  const normalized = field === 'featured' ? !!value : value;
+  if (!workDrafts[id]) workDrafts[id] = {};
+  workDrafts[id][field] = normalized;
+
+  const same = field === 'featured'
+    ? Boolean(original[field]) === Boolean(normalized)
+    : String(original[field] || '') === String(normalized || '');
+  if (same) delete workDrafts[id][field];
+  if (!Object.keys(workDrafts[id]).length) delete workDrafts[id];
+
+  const row = $('#w-list tr[data-id="' + CSS.escape(id) + '"]');
+  if (row) {
+    const view = workDraftView(original);
+    const cell = row.querySelector('.done-cell');
+    if (cell) cell.innerHTML = completionBadge(workMissing(view));
+    row.classList.toggle('dirty', hasWorkDraft(id));
+  }
+  updateWorksDirtyUi();
+}
+
+async function saveWorkDrafts(ids, draw) {
+  const dirtyIds = (ids || Object.keys(workDrafts)).filter(hasWorkDraft);
+  if (!dirtyIds.length) return;
+  const invalid = dirtyIds
+    .map(id => ({ id, w: Object.assign({}, db.works.find(x => x.id === id) || {}, cleanWorkPatch(id)) }))
+    .filter(x => !String(x.w.title || '').trim());
+  if (invalid.length) {
+    alert('Svaki rad mora imati naziv. Provjeri označene redove prije spremanja.');
+    return;
+  }
+  const patches = {};
+  dirtyIds.forEach(id => { patches[id] = cleanWorkPatch(id); });
+  const originals = {};
+  dirtyIds.forEach(id => {
+    const w = db.works.find(x => x.id === id);
+    if (w) originals[id] = Object.assign({}, w);
+  });
+  dirtyIds.forEach(id => {
+    const w = db.works.find(x => x.id === id);
+    if (w) Object.assign(w, patches[id]);
+  });
+  setBusy(true);
+  try {
+    await saveFile('works', dirtyIds.length === 1
+      ? 'Uređen rad iz tablice: ' + (db.works.find(w => w.id === dirtyIds[0]) || {}).title
+      : 'Uređeni radovi iz tablice: ' + dirtyIds.length);
+    dirtyIds.forEach(id => { delete workDrafts[id]; });
+    if (draw) draw();
+  } catch (err) {
+    dirtyIds.forEach(id => {
+      const w = db.works.find(x => x.id === id);
+      if (w && originals[id]) Object.assign(w, originals[id]);
+    });
+    alert('Greška pri spremanju: ' + err.message);
+  } finally {
+    setBusy(false);
+    updateWorksDirtyUi();
+  }
+}
+
+function renderWorks() {
+  const c = $('#content');
+  c.innerHTML = `<div class="works-admin">
+    <div class="bar works-topbar">
+      <button class="btn" id="add-work">＋ Dodaj rad</button>
+      <button class="btn-sm" id="import-gp">⬇ Uvezi iz Google Photosa</button>
+      <input id="w-search" type="search" placeholder="Pretraži naslov, šifru, kolekciju..." value="${esc(workUi.q)}">
+    </div>
+    <div class="work-filters">
+      <label>Status<select id="wf-status">
+        <option value="all">Svi statusi</option>
+        ${Object.keys(STATUS_NAMES).map(s => `<option value="${s}"${workUi.status === s ? ' selected' : ''}>${STATUS_NAMES[s]}</option>`).join('')}
+      </select></label>
+      <label>Kolekcija<select id="wf-collection">
+        <option value="all">Sve kolekcije</option>
+        <option value=""${workUi.collection === '' ? ' selected' : ''}>Bez kolekcije</option>
+        ${db.collections.map(k => `<option value="${esc(k.id)}"${workUi.collection === k.id ? ' selected' : ''}>${esc(k.name)}</option>`).join('')}
+      </select></label>
+      <label>Fotografija<select id="wf-image">
+        <option value="all">Sve</option>
+        <option value="with"${workUi.image === 'with' ? ' selected' : ''}>Ima fotografiju</option>
+        <option value="without"${workUi.image === 'without' ? ' selected' : ''}>Bez fotografije</option>
+      </select></label>
+      <label>Dovršenost<select id="wf-completion">
+        <option value="all">Sve</option>
+        <option value="incomplete"${workUi.completion === 'incomplete' ? ' selected' : ''}>Nedovršeno</option>
+        <option value="complete"${workUi.completion === 'complete' ? ' selected' : ''}>Gotovo</option>
+      </select></label>
+      <label>Naslovnica<select id="wf-featured">
+        <option value="all">Sve</option>
+        <option value="yes"${workUi.featured === 'yes' ? ' selected' : ''}>Istaknuto</option>
+        <option value="no"${workUi.featured === 'no' ? ' selected' : ''}>Nije istaknuto</option>
+      </select></label>
+    </div>
+    <div class="work-savebar">
+      <div>
+        <strong id="work-result-count"></strong>
+        <span class="small" id="work-dirty-count">Nema nespremljenih promjena</span>
+      </div>
+      <div class="savebar-actions">
+        <button class="btn-sm" id="discard-work-drafts" disabled>Poništi promjene</button>
+        <button class="btn" id="save-work-drafts" disabled>Spremi promjene</button>
+      </div>
+    </div>
+    <div id="w-list"></div>
+  </div>`;
+
+  const collectionOptions = selected => `<option value=""${!selected ? ' selected' : ''}>Bez kolekcije</option>` +
+    db.collections.map(k => `<option value="${esc(k.id)}"${selected === k.id ? ' selected' : ''}>${esc(k.name)}</option>`).join('');
+  const statusOptions = selected => Object.keys(STATUS_NAMES).map(s =>
+    `<option value="${s}"${selected === s ? ' selected' : ''}>${STATUS_NAMES[s]}</option>`).join('');
+  const priceModeOptions = selected => Object.keys(PRICE_MODES).map(m =>
+    `<option value="${m}"${selected === m ? ' selected' : ''}>${PRICE_MODES[m]}</option>`).join('');
+  const head = (key, label) => `<th><button type="button" class="sort-head" data-sort="${key}">${label}${sortIndicator(key)}</button></th>`;
+
+  const filtered = () => {
+    const q = workUi.q.trim().toLowerCase();
+    const items = db.works.map(w => ({ original: w, view: workDraftView(w) })).filter(({ view }) => {
+      const missing = workMissing(view);
+      if (q && !workSearchText(view).includes(q)) return false;
+      if (workUi.status !== 'all' && view.status !== workUi.status) return false;
+      if (workUi.collection !== 'all' && String(view.collection || '') !== workUi.collection) return false;
+      if (workUi.image === 'with' && !view.image) return false;
+      if (workUi.image === 'without' && view.image) return false;
+      if (workUi.completion === 'complete' && missing.length) return false;
+      if (workUi.completion === 'incomplete' && !missing.length) return false;
+      if (workUi.featured === 'yes' && !view.featured) return false;
+      if (workUi.featured === 'no' && view.featured) return false;
+      return true;
+    });
+    items.sort((a, b) => {
+      const av = workSortValue(a.view, workUi.sort);
+      const bv = workSortValue(b.view, workUi.sort);
+      let cmp = 0;
+      if (typeof av === 'number' && typeof bv === 'number') cmp = av - bv;
+      else cmp = String(av).localeCompare(String(bv), 'hr', { numeric: true, sensitivity: 'base' });
+      if (!cmp) cmp = String(a.view.title || '').localeCompare(String(b.view.title || ''), 'hr', { numeric: true, sensitivity: 'base' });
+      return workUi.dir === 'asc' ? cmp : -cmp;
+    });
+    return items.map(x => x.original);
+  };
+
+  const draw = () => {
+    const allViews = db.works.map(workDraftView);
+    const incomplete = allViews.filter(w => workMissing(w).length).length;
+    const noImage = allViews.filter(w => !w.image).length;
+    const visible = filtered();
+    $('#work-result-count').textContent = visible.length + ' / ' + db.works.length +
+      ' radova · nedovršeno ' + incomplete + ' · bez fotografije ' + noImage;
+    $('#w-list').innerHTML = visible.length ? `<div class="table-wrap"><table class="works-table">
+      <thead><tr>
+        ${head('image', 'Slika')}
+        ${head('title', 'Naziv')}
+        ${head('code', 'Šifra')}
+        ${head('collection', 'Kolekcija')}
+        ${head('status', 'Status')}
+        ${head('complete', 'Gotovo')}
+        <th>Dimenzije</th>
+        <th>Tehnika</th>
+        <th>Cijena</th>
+        ${head('featured', 'Naslovnica')}
+        <th>Akcije</th>
+      </tr></thead>
+      <tbody>${visible.map(w => {
+        const v = workDraftView(w);
+        const missing = workMissing(v);
+        return `<tr data-id="${esc(w.id)}" class="${hasWorkDraft(w.id) ? 'dirty' : ''}">
+          <td class="photo-cell"><img class="thumb" src="${esc(v.image || 'images/bez-fotografije.svg')}" alt=""></td>
+          <td class="title-cell"><input data-field="title" data-id="${esc(w.id)}" value="${esc(v.title)}"></td>
+          <td><input class="code-input" data-field="code" data-id="${esc(w.id)}" value="${esc(v.code || '')}" placeholder="SV-001"></td>
+          <td><select data-field="collection" data-id="${esc(w.id)}">${collectionOptions(v.collection)}</select></td>
+          <td><select data-field="status" data-id="${esc(w.id)}">${statusOptions(v.status)}</select></td>
+          <td class="done-cell">${completionBadge(missing)}</td>
+          <td><input data-field="dimensions" data-id="${esc(w.id)}" value="${esc(v.dimensions || '')}" placeholder="30 x 40 cm"></td>
+          <td><input data-field="technique" data-id="${esc(w.id)}" value="${esc(v.technique || '')}" placeholder="akvarel"></td>
+          <td class="price-cell">
+            <input data-field="price" data-id="${esc(w.id)}" value="${esc(v.price || '')}" placeholder="cijena">
+            <select data-field="priceMode" data-id="${esc(w.id)}">${priceModeOptions(v.priceMode || 'inquiry')}</select>
+          </td>
+          <td class="center-cell"><input type="checkbox" data-field="featured" data-id="${esc(w.id)}"${v.featured ? ' checked' : ''}></td>
+          <td class="row-actions">
+            <button class="btn-sm" data-save-row="${esc(w.id)}">Spremi red</button>
+            <button class="btn-sm" data-edit="${esc(w.id)}">Detalji</button>
+            <button class="btn-sm danger" data-del="${esc(w.id)}">Obriši</button>
+          </td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table></div>` : '<p class="small">Nema radova za odabrane filtere.</p>';
+    updateWorksDirtyUi();
+  };
+
+  $('#add-work').addEventListener('click', () => workForm(null));
+  $('#import-gp').addEventListener('click', importForm);
+  $('#w-search').addEventListener('input', e => { workUi.q = e.target.value; draw(); });
+  $('#wf-status').addEventListener('change', e => { workUi.status = e.target.value; draw(); });
+  $('#wf-collection').addEventListener('change', e => { workUi.collection = e.target.value; draw(); });
+  $('#wf-image').addEventListener('change', e => { workUi.image = e.target.value; draw(); });
+  $('#wf-completion').addEventListener('change', e => { workUi.completion = e.target.value; draw(); });
+  $('#wf-featured').addEventListener('change', e => { workUi.featured = e.target.value; draw(); });
+  $('#save-work-drafts').addEventListener('click', () => saveWorkDrafts(null, draw));
+  $('#discard-work-drafts').addEventListener('click', () => {
+    Object.keys(workDrafts).forEach(id => delete workDrafts[id]);
+    draw();
+  });
+
+  $('#w-list').addEventListener('click', async e => {
+    const sort = e.target.closest('[data-sort]');
+    if (sort) {
+      if (workUi.sort === sort.dataset.sort) workUi.dir = workUi.dir === 'asc' ? 'desc' : 'asc';
+      else { workUi.sort = sort.dataset.sort; workUi.dir = 'asc'; }
+      draw();
+      return;
+    }
+    const saveRow = e.target.closest('[data-save-row]');
+    if (saveRow) { await saveWorkDrafts([saveRow.dataset.saveRow], draw); return; }
+    const edit = e.target.closest('[data-edit]');
+    if (edit) {
+      const w = db.works.find(x => x.id === edit.dataset.edit);
+      if (w && hasWorkDraft(w.id)) {
+        Object.assign(w, cleanWorkPatch(w.id));
+        delete workDrafts[w.id];
+      }
+      if (w) workForm(w);
+      return;
+    }
+    const del = e.target.closest('[data-del]');
+    if (del) {
+      const w = db.works.find(x => x.id === del.dataset.del);
+      if (!w) return;
+      if (!confirm('Obrisati rad "' + w.title + '"? Ovo se ne može poništiti.')) return;
+      delete workDrafts[w.id];
+      db.works = db.works.filter(x => x !== w);
+      setBusy(true);
+      try { await saveFile('works', 'Obrisan rad: ' + w.title); draw(); }
+      catch (err) { alert('Greška pri spremanju: ' + err.message); }
+      finally { setBusy(false); }
+    }
+  });
+
+  $('#w-list').addEventListener('input', e => {
+    const el = e.target.closest('[data-field]');
+    if (!el || el.type === 'checkbox') return;
+    setWorkDraft(el.dataset.id, el.dataset.field, el.value);
+  });
+  $('#w-list').addEventListener('change', e => {
+    const el = e.target.closest('[data-field]');
+    if (!el) return;
+    setWorkDraft(el.dataset.id, el.dataset.field, el.type === 'checkbox' ? el.checked : el.value);
   });
 
   draw();
