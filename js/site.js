@@ -246,7 +246,7 @@ function renderHome() {
           <span class="cnt">${cnt} ${t('worksInCollection')}</span></a></li>`;
       }).join('')}</ol>
     </div></section>`;
-  } else if (S.theme === 'noir') {
+  } else if (S.theme === 'noir' || (S.theme === 'white-cube' && st.heroImage)) {
     hero = `<section class="hero" style="background-image:url('${esc(st.heroImage)}')">
       <div class="hero-overlay"></div>
       <div class="hero-content">
