@@ -633,10 +633,6 @@ function renderSettings() {
           <div class="theme-dots">${th.colors.map(cl => `<span style="background:${cl}"></span>`).join('')}</div>
           <h4>${th.name}</h4><p>${th.desc}</p>
         </div>`).join('')}</div>
-      <div class="theme-actions">
-        <button class="btn-sm" type="button" id="s-preview-theme">Isprobaj odabranu temu</button>
-        <span class="small">Otvara pregled odmah, bez spremanja i bez cekanja objave.</span>
-      </div>
       <p class="small">Promjena teme ne briše nikakav sadržaj — mijenja samo izgled.</p>
     </div>
     <div class="card">
@@ -663,7 +659,11 @@ function renderSettings() {
         <option value="sl"${st.language === 'sl' ? ' selected' : ''}>Slovenščina</option>
       </select></label>
     </div>
-    <button class="btn" id="s-save">Spremi postavke</button>`;
+    <div class="settings-float-actions">
+      <button class="btn" id="s-save">Spremi postavke</button>
+      <button class="btn-sm" type="button" id="s-preview-theme">Isprobaj temu</button>
+      <span class="small">Pregled odmah, spremanje posebno.</span>
+    </div>`;
   bindImageField('hero');
   bindImageField('about');
   const previewThemeUrl = () => {

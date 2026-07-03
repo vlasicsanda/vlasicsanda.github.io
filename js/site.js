@@ -11,7 +11,7 @@ const STATUS_CLASSES = {
 
 const THEME_LIST = ['white-cube', 'atelier', 'noir', 'kino', 'mozaik'];
 const THEME_LEGACY = { museum: 'white-cube', minimal: 'white-cube', mediterranean: 'atelier', dark: 'noir' };
-const ASSET_VERSION = '20260703-wide';
+const ASSET_VERSION = '20260703-tune';
 
 const S = { settings: null, works: [], collections: [], news: [], t: {}, theme: 'white-cube' };
 const $ = s => document.querySelector(s);
@@ -386,21 +386,23 @@ function renderHomeWow() {
   } else if (S.theme === 'mozaik') {
     const tiles = heroItems.slice(0, 6);
     hero = `<section class="landing landing-mozaik">
-      <div class="mozaik-wall">
-        ${tiles.map((w, i) => `<a class="mozaik-tile tile-${i + 1}" href="rad.html?id=${encodeURIComponent(w.id)}" style="--i:${i}">
-          <img src="${esc(workImg(w))}" alt="${esc(w.title)}">
-        </a>`).join('')}
-      </div>
       <div class="mozaik-copy">
         <p class="landing-kicker">${esc(st.tagline || '')}</p>
         <h1>${esc(st.heroTitle || st.siteTitle)}</h1>
         <p>${esc(st.heroSubtitle || '')}</p>
         <a class="btn" href="galerija.html">${t('viewGallery')}</a>
       </div>
-      <div class="mozaik-marquee" aria-hidden="true">
-        <span>${esc(st.siteTitle)} / watercolor / Vela Luka / gallery / </span>
-        <span>${esc(st.siteTitle)} / watercolor / Vela Luka / gallery / </span>
+      <div class="mozaik-wall">
+        ${tiles.map((w, i) => `<a class="mozaik-tile tile-${i + 1}" href="rad.html?id=${encodeURIComponent(w.id)}" style="--i:${i}">
+          <img src="${esc(workImg(w))}" alt="${esc(w.title)}">
+        </a>`).join('')}
       </div>
+      ${primary ? `<a class="mozaik-feature" href="rad.html?id=${encodeURIComponent(primary.id)}">
+        <span>Mozaik izbor</span>
+        <strong>${esc(primary.title)}</strong>
+        <em>${esc(meta || 'Akvarel')}</em>
+      </a>` : ''}
+      <div class="mozaik-count" aria-hidden="true">${String(tiles.length).padStart(2, '0')} odabranih radova</div>
     </section>`;
   } else {
     hero = `<section class="typo-hero">

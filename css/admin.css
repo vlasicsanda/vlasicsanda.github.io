@@ -82,9 +82,23 @@ label.check input { width: 22px; height: 22px; margin: 0; }
 .theme-dots span { width: 22px; height: 22px; border-radius: 50%; border: 1px solid rgba(0, 0, 0, .12); }
 .theme-card h4 { margin: 0 0 2px; }
 .theme-card p { margin: 0; font-size: .8rem; color: #6b7280; }
-.theme-actions {
-  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
-  margin-top: 10px; padding-top: 12px; border-top: 1px solid #e5e7eb;
+.settings-float-actions {
+  position: fixed; right: 18px; bottom: 18px; z-index: 50;
+  display: grid; gap: 8px; width: min(300px, calc(100vw - 32px));
+  background: rgba(17, 24, 39, .96); color: #fff;
+  padding: 12px; border-radius: 14px; box-shadow: 0 18px 46px rgba(0, 0, 0, .28);
+}
+.settings-float-actions .btn { width: 100%; }
+.settings-float-actions .btn-sm {
+  width: 100%; background: transparent; color: #bfdbfe; border-color: rgba(191, 219, 254, .42);
+}
+.settings-float-actions .small { color: #cbd5e1; text-align: center; }
+@media (max-width: 640px) {
+  .settings-float-actions {
+    left: 12px; right: 12px; bottom: 12px;
+    width: auto; grid-template-columns: 1fr 1fr;
+  }
+  .settings-float-actions .small { grid-column: 1 / -1; }
 }
 
 .toast {

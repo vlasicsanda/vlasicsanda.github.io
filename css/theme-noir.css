@@ -218,7 +218,7 @@ body[data-page="home"].theme-noir .site-header {
 }
 .landing-noir .wide-landing-feature {
   color: #f1dfb9;
-  border-top-color: rgba(201, 168, 106, .72);
+  border-top-color: rgba(201, 168, 106, .42);
 }
 .landing-noir .wide-landing-rail {
   max-width: 790px;

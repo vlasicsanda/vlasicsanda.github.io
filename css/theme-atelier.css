@@ -244,8 +244,8 @@
   z-index: 2;
   height: auto;
   background:
-    linear-gradient(90deg, rgba(255, 244, 218, .22) 0 1px, transparent 1px) 6vw 0 / 18vw 100% repeat-x,
-    linear-gradient(180deg, transparent 0 72%, rgba(255, 244, 218, .16) 72% 72.2%, transparent 72.2%);
+    radial-gradient(circle at 28% 22%, rgba(255, 244, 218, .12), transparent 24%),
+    linear-gradient(180deg, rgba(255, 244, 218, .06), transparent 42%);
   pointer-events: none;
 }
 .landing-atelier .wide-landing-copy {
@@ -277,7 +277,7 @@
   }
   .landing-atelier.wide-landing::before {
     background:
-      linear-gradient(90deg, rgba(255, 244, 218, .18) 0 1px, transparent 1px) 20px 0 / 34vw 100% repeat-x;
+      radial-gradient(circle at 28% 18%, rgba(255, 244, 218, .12), transparent 34%);
   }
   .landing-atelier .wide-landing-copy {
     padding-top: 100px;

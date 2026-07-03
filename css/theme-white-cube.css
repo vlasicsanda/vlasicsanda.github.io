@@ -202,8 +202,11 @@ h1, h2 { letter-spacing: .06em; }
 }
 .landing-white .wide-landing-copy h1 {
   font-weight: 200;
-  letter-spacing: .12em;
-  text-transform: uppercase;
+  letter-spacing: .01em;
+  line-height: .92;
+  text-transform: none;
+  font-size: clamp(4.2rem, 9.5vw, 8.2rem);
+  max-width: 720px;
 }
 .landing-white .wide-landing-feature {
   color: #23231f;
@@ -225,6 +228,7 @@ h1, h2 { letter-spacing: .06em; }
     padding-top: 82px;
   }
   .landing-white .wide-landing-copy h1 {
-    letter-spacing: .07em;
+    letter-spacing: 0;
+    font-size: clamp(3.6rem, 15vw, 5.8rem);
   }
 }
