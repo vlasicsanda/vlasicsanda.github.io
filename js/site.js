@@ -106,6 +106,31 @@ function heroSlides() {
   return Array.from(new Set(imgs)).slice(0, 6);
 }
 
+function heroWorks() {
+  const withImages = S.works.filter(w => w.image);
+  const featured = withImages.filter(w => w.featured);
+  return (featured.length ? featured : withImages).slice(0, 6);
+}
+
+function heroMeta(w) {
+  if (!w) return '';
+  return [collectionName(w.collection), w.dimensions, w.technique].filter(Boolean).join(' / ');
+}
+
+function slideLayers(images) {
+  return `<div class="hero-slides" id="hero-slides">${images.map((u, i) =>
+    `<div class="hero-slide${i === 0 ? ' active' : ''}" style="background-image:url('${esc(u)}')"></div>`).join('')}</div>`;
+}
+
+function landingThumbs(items, cls) {
+  if (!items.length) return '';
+  return `<div class="${cls}">${items.slice(0, 5).map((w, i) =>
+    `<a href="rad.html?id=${encodeURIComponent(w.id)}" style="--i:${i}">
+      <img src="${esc(workImg(w))}" alt="${esc(w.title)}">
+      <span>${esc(w.title)}</span>
+    </a>`).join('')}</div>`;
+}
+
 function initHeroFx() {
   const wrap = document.getElementById('hero-slides');
   if (!wrap) return;
@@ -307,6 +332,133 @@ function renderHome() {
   initHeroFx();
 }
 
+function renderHomeWow() {
+  const st = S.settings;
+  const featured = S.works.filter(w => w.featured);
+  const show = (featured.length ? featured : S.works).slice(0, S.theme === 'mozaik' ? 12 : 6);
+  const heroItems = heroWorks();
+  const heroImages = heroSlides();
+  const primary = heroItems[0];
+  const meta = heroMeta(primary);
+
+  if (S.theme === 'kino') {
+    const slides = heroItems;
+    $('#main').innerHTML = `<div class="kino-slides">
+      ${slides.map((w, i) => `<a class="kino-slide" href="rad.html?id=${encodeURIComponent(w.id)}" style="background-image:url('${esc(w.image)}')">
+        <div class="kino-info"><h2>${esc(w.title)}</h2>
+          <p>${[w.dimensions, w.technique].filter(Boolean).map(esc).join(' / ')}${priceHTML(w) ? ' / ' : ''}${priceHTML(w)}</p></div>
+        <span class="kino-count">${i + 1} / ${slides.length}</span>
+        ${i === 0 ? '<span class="kino-hint">v</span>' : ''}
+      </a>`).join('')}
+      <div class="kino-slide kino-cta">
+        <div class="kino-info">
+          <h2>${esc(st.heroTitle || st.siteTitle)}</h2>
+          <p style="margin-bottom:26px">${esc(st.heroSubtitle || '')}</p>
+          <a class="btn" href="galerija.html">${t('viewGallery')}</a>
+        </div>
+      </div>
+    </div>`;
+    return;
+  }
+
+  let hero;
+  if (S.theme === 'white-cube') {
+    hero = `<section class="landing landing-white">
+      <div class="landing-white-frame">
+        ${slideLayers(heroImages)}
+        <div class="hero-overlay"></div>
+      </div>
+      <div class="landing-white-copy">
+        <p class="landing-kicker">${esc(st.tagline || '')}</p>
+        <h1>${esc(st.heroTitle || st.siteTitle)}</h1>
+        <p>${esc(st.heroSubtitle || '')}</p>
+        ${primary ? `<a class="landing-feature" href="rad.html?id=${encodeURIComponent(primary.id)}">
+          <span>Featured work</span>
+          <strong>${esc(primary.title)}</strong>
+          <em>${esc(meta)}</em>
+        </a>` : ''}
+        <a class="btn" href="galerija.html">${t('viewGallery')}</a>
+      </div>
+      ${landingThumbs(heroItems, 'landing-white-rail')}
+    </section>`;
+  } else if (S.theme === 'atelier') {
+    const trio = heroItems.slice(0, 3);
+    hero = `<section class="landing landing-atelier">
+      <div class="atelier-backdrop">${slideLayers(heroImages)}</div>
+      <div class="atelier-copy">
+        <p class="landing-kicker">${esc(st.tagline || '')}</p>
+        <h1>${String(st.heroTitle || st.siteTitle).split(' ').map(esc).join('<br>')}</h1>
+        <p>${esc(st.heroSubtitle || '')}</p>
+        <a class="btn" href="galerija.html">${t('viewGallery')}</a>
+      </div>
+      <div class="atelier-collage">
+        ${trio.map((w, i) => `<a class="atelier-piece piece-${i + 1}" href="rad.html?id=${encodeURIComponent(w.id)}">
+          <img src="${esc(workImg(w))}" alt="${esc(w.title)}">
+          <span>${esc(w.title)}</span>
+        </a>`).join('')}
+      </div>
+      <div class="atelier-note">
+        <span>01</span>
+        <strong>watercolor studio</strong>
+        <p>${esc(meta || st.heroSubtitle || '')}</p>
+      </div>
+    </section>
+    <section class="section" style="padding-top:30px"><div class="container">
+      <ol class="at-collections">${S.collections.map((c, i) => {
+        const cnt = S.works.filter(w => w.collection === c.id).length;
+        return `<li><a href="galerija.html?kolekcija=${encodeURIComponent(c.id)}">
+          <span class="num">${String(i + 1).padStart(2, '0')}</span>${esc(c.name)}
+          <span class="cnt">${cnt} ${t('worksInCollection')}</span></a></li>`;
+      }).join('')}</ol>
+    </div></section>`;
+  } else if (S.theme === 'noir') {
+    hero = `<section class="landing landing-noir">
+      ${slideLayers(heroImages)}
+      <div class="hero-overlay"></div>
+      <div class="noir-stage">
+        <div class="noir-caption">
+          <p class="landing-kicker">${esc(st.tagline || '')}</p>
+          <h1>${esc(st.heroTitle || st.siteTitle)}</h1>
+          <p>${esc(st.heroSubtitle || '')}</p>
+          <a class="btn" href="galerija.html">${t('viewGallery')}</a>
+        </div>
+        ${primary ? `<a class="noir-frame" href="rad.html?id=${encodeURIComponent(primary.id)}">
+          <img src="${esc(workImg(primary))}" alt="${esc(primary.title)}">
+          <span>${esc(primary.title)}</span>
+        </a>` : ''}
+        ${landingThumbs(heroItems.slice(1), 'noir-thumbs')}
+      </div>
+    </section>`;
+  } else if (S.theme === 'mozaik') {
+    const tiles = heroItems.slice(0, 6);
+    hero = `<section class="landing landing-mozaik">
+      <div class="mozaik-wall">
+        ${tiles.map((w, i) => `<a class="mozaik-tile tile-${i + 1}" href="rad.html?id=${encodeURIComponent(w.id)}" style="--i:${i}">
+          <img src="${esc(workImg(w))}" alt="${esc(w.title)}">
+        </a>`).join('')}
+      </div>
+      <div class="mozaik-copy">
+        <p class="landing-kicker">${esc(st.tagline || '')}</p>
+        <h1>${esc(st.heroTitle || st.siteTitle)}</h1>
+        <p>${esc(st.heroSubtitle || '')}</p>
+        <a class="btn" href="galerija.html">${t('viewGallery')}</a>
+      </div>
+      <div class="mozaik-marquee" aria-hidden="true">
+        <span>${esc(st.siteTitle)} / watercolor / Vela Luka / gallery / </span>
+        <span>${esc(st.siteTitle)} / watercolor / Vela Luka / gallery / </span>
+      </div>
+    </section>`;
+  } else {
+    hero = `<section class="typo-hero">
+      <h1>${esc(st.heroTitle || st.siteTitle)}</h1>
+      <p class="tagline">${esc(st.heroSubtitle || '')}</p>
+    </section>`;
+  }
+
+  $('#main').innerHTML = hero + featuredSection(show) + newsTeasers();
+  initHeroFx();
+}
+
 function renderGallery() {
   $('#main').innerHTML = `<section class="section"><div class="container">
     <h1 class="page-head">${t('nav_gallery')}</h1>
@@ -477,21 +629,22 @@ function renderContact() {
   }
   S.t = (typeof I18N !== 'undefined' && I18N[S.settings.language]) || I18N.hr;
 
-  let theme = S.settings.theme || 'white-cube';
+  const previewTheme = param('theme') || param('tema');
+  let theme = previewTheme || S.settings.theme || 'white-cube';
   theme = THEME_LEGACY[theme] || theme;
   if (!THEME_LIST.includes(theme)) theme = 'white-cube';
   S.theme = theme;
   document.body.classList.add('theme-' + theme);
   const link = document.getElementById('theme-css');
   if (link) link.href = 'css/theme-' + theme + '.css';
-  try { localStorage.setItem('sv-theme', theme); } catch (e) { }
+  if (!previewTheme) try { localStorage.setItem('sv-theme', theme); } catch (e) { }
 
   S.works.sort((a, b) => String(b.created || '').localeCompare(String(a.created || '')));
 
   renderHeader();
   renderFooter();
   ({
-    home: renderHome,
+    home: renderHomeWow,
     gallery: renderGallery,
     collections: renderCollections,
     work: renderWork,

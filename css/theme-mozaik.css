@@ -47,3 +47,133 @@
 .btn { font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; padding: 14px 34px; }
 .filters { margin: 14px 0 22px; }
 .news-item { border-radius: 0; }
+
+/* wow landing: full-screen image wall */
+body[data-page="home"].theme-mozaik .site-header {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  background: linear-gradient(rgba(255, 255, 255, .94), rgba(255, 255, 255, .18));
+  border-bottom: none;
+  backdrop-filter: blur(10px);
+}
+.landing-mozaik {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: 100px 20px 80px;
+  color: #fff;
+  background: #070707;
+}
+.landing-mozaik::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(0, 0, 0, .12), rgba(0, 0, 0, .72) 66%),
+    linear-gradient(90deg, rgba(0, 0, 0, .68), rgba(0, 0, 0, .22), rgba(0, 0, 0, .68));
+  pointer-events: none;
+}
+.mozaik-wall {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+}
+.mozaik-tile {
+  position: absolute;
+  display: block;
+  overflow: hidden;
+  box-shadow: 0 24px 90px rgba(0, 0, 0, .45);
+  opacity: .94;
+}
+.mozaik-tile img {
+  transition: transform .9s ease;
+}
+.mozaik-tile:hover img { transform: scale(1.05); }
+.tile-1 { left: 4vw; top: 12vh; width: 28vw; height: 54vh; }
+.tile-2 { left: 35vw; top: 5vh; width: 24vw; height: 32vh; }
+.tile-3 { right: 5vw; top: 16vh; width: 30vw; height: 46vh; }
+.tile-4 { left: 23vw; bottom: 7vh; width: 25vw; height: 33vh; }
+.tile-5 { right: 25vw; bottom: 8vh; width: 20vw; height: 30vh; }
+.tile-6 { right: 4vw; bottom: 7vh; width: 17vw; height: 24vh; }
+.mozaik-copy {
+  position: relative;
+  z-index: 4;
+  max-width: 980px;
+  text-align: center;
+  text-shadow: 0 12px 44px rgba(0, 0, 0, .8);
+}
+.mozaik-copy .landing-kicker { color: rgba(255, 255, 255, .72); }
+.mozaik-copy h1 {
+  margin: 0 0 18px;
+  font-size: clamp(3.4rem, 12vw, 10rem);
+  line-height: .82;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.mozaik-copy > p:not(.landing-kicker) {
+  max-width: 560px;
+  margin: 0 auto 28px;
+  color: rgba(255, 255, 255, .86);
+  font-size: clamp(1rem, 1.5vw, 1.22rem);
+}
+.mozaik-copy .btn {
+  color: #fff;
+  border-color: rgba(255, 255, 255, .88);
+  background: transparent;
+}
+.mozaik-copy .btn:hover {
+  color: #070707;
+  background: #fff;
+}
+.mozaik-marquee {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 22px;
+  z-index: 4;
+  display: flex;
+  gap: 0;
+  overflow: hidden;
+  color: rgba(255, 255, 255, .62);
+  font-size: .72rem;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.mozaik-marquee span {
+  min-width: 100%;
+  animation: mozaik-marquee 22s linear infinite;
+}
+@keyframes mozaik-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-100%); }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .mozaik-tile { animation: mozaik-float 7s ease-in-out infinite alternate; animation-delay: calc(var(--i, 0) * .4s); }
+  @keyframes mozaik-float {
+    from { transform: translateY(0); }
+    to { transform: translateY(-16px); }
+  }
+}
+
+@media (max-width: 860px) {
+  .landing-mozaik {
+    padding: 110px 18px 86px;
+    place-items: end center;
+  }
+  .mozaik-copy h1 {
+    font-size: clamp(2.6rem, 18vw, 5.2rem);
+    letter-spacing: .08em;
+  }
+  .tile-1 { left: -12vw; top: 10vh; width: 58vw; height: 36vh; }
+  .tile-2 { left: 44vw; top: 8vh; width: 50vw; height: 28vh; }
+  .tile-3 { right: -14vw; top: 35vh; width: 62vw; height: 34vh; }
+  .tile-4 { left: 5vw; bottom: 18vh; width: 44vw; height: 28vh; }
+  .tile-5,
+  .tile-6 { display: none; }
+}
