@@ -1,0 +1,27 @@
+[
+  {
+    "id": "more",
+    "name": "More",
+    "description": "Motivi mora, valova i obale."
+  },
+  {
+    "id": "vela-luka",
+    "name": "Vela Luka",
+    "description": "Rodno mjesto — rive, vale i stare kuće."
+  },
+  {
+    "id": "zalasci-sunca",
+    "name": "Zalasci sunca",
+    "description": "Topli tonovi sutona nad otocima."
+  },
+  {
+    "id": "cvijece",
+    "name": "Cvijeće",
+    "description": "Mediteransko cvijeće i vrtovi."
+  },
+  {
+    "id": "putovanja",
+    "name": "Putovanja",
+    "description": "Dojmovi i krajolici s putovanja."
+  }
+]

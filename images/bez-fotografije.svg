@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000">
+  <rect width="800" height="1000" fill="#e9e6e0"/>
+  <rect x="290" y="400" width="220" height="170" rx="14" fill="none" stroke="#b3ada2" stroke-width="10"/>
+  <circle cx="355" cy="460" r="22" fill="#b3ada2"/>
+  <path d="M310 545 L 380 480 L 430 525 L 465 495 L 490 545 Z" fill="#b3ada2"/>
+  <text x="400" y="640" text-anchor="middle" font-family="Arial, sans-serif" font-size="30" fill="#a09a8e">Bez fotografije</text>
+</svg>

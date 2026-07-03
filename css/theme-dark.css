@@ -1,0 +1,23 @@
+/* Tema: Fine Art Dark — tamna pozadina, premium izgled, velike fotografije */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Manrope:wght@400;500&display=swap');
+
+:root {
+  --bg: #101114;
+  --surface: #191b1f;
+  --alt: #16181c;
+  --text: #eae7e0;
+  --muted: #9b978d;
+  --border: #2a2d33;
+  --accent: #c9a86a;
+  --accent-contrast: #15130e;
+  --font-heading: 'Playfair Display', Georgia, serif;
+  --font-body: 'Manrope', system-ui, sans-serif;
+  --heading-weight: 500;
+  --radius: 4px;
+  --shadow: 0 4px 18px rgba(0, 0, 0, .5);
+  --hero-overlay: rgba(0, 0, 0, .55);
+  --header-bg: rgba(16, 17, 20, .9);
+  --section-pad: 80px;
+}
+
+.hero-content h1 { font-size: clamp(2.6rem, 6.5vw, 4.4rem); }

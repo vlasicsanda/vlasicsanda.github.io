@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+
+Sitemap: https://KORISNICKO-IME.github.io/sanda-vlasic-web/sitemap.xml

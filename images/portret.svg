@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 750">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e8ddc9"/>
+      <stop offset="1" stop-color="#c9b391"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="750" fill="url(#bg)"/>
+  <circle cx="300" cy="290" r="105" fill="#a98f68" opacity=".55"/>
+  <path d="M120 750 Q 300 480 480 750 Z" fill="#a98f68" opacity=".55"/>
+  <text x="300" y="700" text-anchor="middle" font-family="Georgia, serif" font-size="26" fill="#6d5c40">Fotografija umjetnice</text>
+</svg>

@@ -1,0 +1,24 @@
+/* Tema: Mediterranean — svijetle boje, ugođaj mora i Dalmacije */
+@import url('https://fonts.googleapis.com/css2?family=Lora:wght@500;600&family=Karla:wght@400;500&display=swap');
+
+:root {
+  --bg: #f8faf9;
+  --surface: #ffffff;
+  --alt: #eaf2f2;
+  --text: #1f3038;
+  --muted: #5f7a84;
+  --border: #d9e6e8;
+  --accent: #2f6f8f;
+  --accent-contrast: #ffffff;
+  --font-heading: 'Lora', Georgia, serif;
+  --font-body: 'Karla', system-ui, sans-serif;
+  --heading-weight: 600;
+  --radius: 10px;
+  --shadow: 0 2px 12px rgba(47, 111, 143, .10);
+  --hero-overlay: rgba(18, 50, 66, .40);
+  --header-bg: rgba(248, 250, 249, .92);
+  --section-pad: 72px;
+}
+
+.site-nav a.active { border-bottom-color: #d9a441; }
+.badge-available { background: #2f8f6f; }
