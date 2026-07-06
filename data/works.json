@@ -1,5 +1,37 @@
 [
   {
+    "id": "uvoz-20260706-092618-01",
+    "title": "Nova slika 1",
+    "code": "",
+    "dimensions": "",
+    "technique": "",
+    "description": "",
+    "price": "",
+    "priceMode": "inquiry",
+    "status": "dostupna",
+    "collection": "",
+    "image": "images/uvoz-20260706-092618-01.jpg",
+    "featured": false,
+    "created": "2026-07-06",
+    "source": "https://lh3.googleusercontent.com/pw/AP1GczOJpWNSLtNNfbS4-2NzPyVxlGyJFTqK-b9E7omzj_vLvsEmqgkSZFcq7In03HE0MiUsau5hqv_ylfkIgZ55UIMbOwIaUjxIhhN34vw7dVWkhwzf4utK"
+  },
+  {
+    "id": "uvoz-20260706-092618-02",
+    "title": "Nova slika 2",
+    "code": "",
+    "dimensions": "",
+    "technique": "",
+    "description": "",
+    "price": "",
+    "priceMode": "inquiry",
+    "status": "dostupna",
+    "collection": "",
+    "image": "images/uvoz-20260706-092618-02.jpg",
+    "featured": false,
+    "created": "2026-07-06",
+    "source": "https://lh3.googleusercontent.com/pw/AP1GczOomYlXC50RP3fxRb8vEhjnZuxLwWG5pk8dBZKsluG76VeQccX0GWB3CGWqxGmN9-E0TzbESiIzP_nGQx6JQZbsotNjEEycTMotR5FYXl-XOtWS24HM4JbYYLnIsL3l9f1hDQqGxsVRE9JgHEDhr35UVg"
+  },
+  {
     "id": "uvoz-20260703-155159-01",
     "title": "Zima",
     "code": "",
