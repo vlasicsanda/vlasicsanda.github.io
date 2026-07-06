@@ -1,5 +1,21 @@
 [
   {
+    "id": "uvoz-20260706-094912-01",
+    "title": "Nova slika 1",
+    "code": "",
+    "dimensions": "",
+    "technique": "",
+    "description": "",
+    "price": "",
+    "priceMode": "inquiry",
+    "status": "dostupna",
+    "collection": "",
+    "image": "images/uvoz-20260706-094912-01.jpg",
+    "featured": false,
+    "created": "2026-07-06",
+    "source": "https://lh3.googleusercontent.com/pw/AP1GczPLcGBJq7F0jGMs3vRC08BPNUXwU653kO7kWwAu8CW3haI2VSr-u_9I2VyplVHUlk4FLxr32bzGTG4kEeQNqLUR37Pgsk-_GUaBX-cDFAsDbWRKr0_otTQEXLX0q9cUXZzWkWIZRIbJXcjR07Pl9D4hVw"
+  },
+  {
     "id": "uvoz-20260706-093345-01",
     "title": "Ciklame",
     "code": "",

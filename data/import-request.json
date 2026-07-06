@@ -1,5 +1,7 @@
 {
   "url": "https://photos.google.com/share/AF1QipN0FPgTeA2lqegq8S90xg9yLoc1yVllyDEIcTP5qZbmfPb9MreWcUy7JrxAxEvkug/photo/AF1QipP4q4DzXgHrap6sNgXIxlTTWAFGYhU3o6QQwEu6?key=cWFIVlUzSkNQaVZRN0FEUGpvR2dKMzFEYm5UTmtB",
-  "status": "pending",
-  "requestedAt": "2026-07-06T09:51:25.209Z"
+  "status": "done",
+  "imported": 1,
+  "skipped": 1,
+  "finishedAt": "2026-07-06T09:49:13"
 }
