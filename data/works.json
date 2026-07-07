@@ -1,5 +1,37 @@
 [
   {
+    "id": "uvoz-20260707-170806-01",
+    "title": "Nova slika 1",
+    "code": "",
+    "dimensions": "",
+    "technique": "",
+    "description": "",
+    "price": "",
+    "priceMode": "inquiry",
+    "status": "dostupna",
+    "collection": "",
+    "image": "images/uvoz-20260707-170806-01.jpg",
+    "featured": false,
+    "created": "2026-07-07",
+    "source": "https://lh3.googleusercontent.com/pw/AP1GczOY_zG8bzz4qWi6UkhpiaJJpPR_E58mwvEsGLDGNhSxRltMjc6FDbX5u1ISwgOqBxsBYxlpEgcSFA4BGG3_Lnmm5qkPAnyg_Xuga8SFGbbrLUPZV2DYL8tIwTROexsOlTylfHtDoQBj28BbQvHzbelX1A"
+  },
+  {
+    "id": "uvoz-20260707-170806-02",
+    "title": "Nova slika 2",
+    "code": "",
+    "dimensions": "",
+    "technique": "",
+    "description": "",
+    "price": "",
+    "priceMode": "inquiry",
+    "status": "dostupna",
+    "collection": "",
+    "image": "images/uvoz-20260707-170806-02.jpg",
+    "featured": false,
+    "created": "2026-07-07",
+    "source": "https://lh3.googleusercontent.com/pw/AP1GczP_k-qkHFPXvvkEq_a5u0N48mMdKRyitA_N8WvA4_XuyYQiwiEETpC9lNgWJsagA-KUOSy-KJpXYsMnLV0zfHATcDbzXQSdREbsjk4_YRdFyr05qtdk"
+  },
+  {
     "id": "uvoz-20260706-093345-01",
     "title": "Ciklame",
     "code": "",
